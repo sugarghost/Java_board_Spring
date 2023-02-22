@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.spring.yoony.article.ArticleDAO">
+  <insert id="insertArticle" parameterMap="com.board.spring.yoony.article.ArticleDTO" useGeneratedKeys="true"
+    keyProperty="articleId" keyColumn="article_id">
+    INSERT INTO article
+      (category_id, writer, password, title, content)
+    VALUES (#{categoryId}, #{writer}, #{password}, #{title}, #{content})
+  </insert>
+  <select id="selectArticleCount" resultType="int" parameterType="Map">
+    SELECT COUNT(article_id) FROM article WHERE 1=1
+    <if
+      test="!@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(searchWord)">
+      AND (
+      title like CONCAT('%',#{searchWord},'%')
+      OR content like CONCAT('%',#{searchWord},'%')
+      OR writer like CONCAT('%',#{searchWord},'%')
+      )
+    </if>
+    <if
+      test="!@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(categoryId)">
+      AND category_id = #{categoryId}
+    </if>
+    <if test="!@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(startDate) and
+    !@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(endDate)">
+      AND created_date BETWEEN date(#{startDate}) AND date(#{endDate})+1
+    </if>
+    ORDER BY article_id DESC
+  </select>
+  <select id="selectArticleList" resultMap="com.board.spring.yoony.article.ArticleDTO" parameterType="Map">
+    SELECT
+      article_id, category_id,
+      (
+      SELECT name
+      FROM category
+      WHERE category_id = article.category_id LIMIT 1
+      ) AS category_name,
+      writer, password, title,
+      content, view_count, created_date, modified_date,
+      (SELECT EXISTS(SELECT 1 FROM article_file WHERE article_id = article.article_id)) AS is_file_exist
+    FROM article
+    WHERE 1=1
+    <if
+      test="!@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(searchWord)">
+      AND (
+      title like CONCAT('%',#{searchWord},'%')
+      OR content like CONCAT('%',#{searchWord},'%')
+      OR writer like CONCAT('%',#{searchWord},'%')
+      )
+    </if>
+    <if
+      test="!@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(categoryId)">
+      AND category_id = #{categoryId}
+    </if>
+    <if test="!@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(startDate) and
+      !@com.board.spring.yoony.util.ValidationChecker@CheckStringIsNullOrEmpty(endDate)">
+      AND created_date BETWEEN date(#{startDate}) AND date(#{endDate})+1
+    </if>
+    ORDER BY article_id DESC
+    LIMIT #{pageSize} OFFSET #{rowStart}
+  </select>
+  <select id="selectArticle" resultMap="com.board.spring.yoony.article.ArticleDTO" parameterType="int">
+    SELECT article_id,
+           category_id,
+           (SELECT name
+            FROM category
+            WHERE category_id = article.category_id LIMIT 1) AS category_name,
+           writer,
+           password,
+           title,
+           content,
+           view_count,
+           created_date,
+           modified_date,
+           (SELECT EXISTS(SELECT 1
+                          FROM article_file
+                          WHERE article_id = article.article_id)) AS is_file_exist
+    FROM article
+    WHERE article_id = #{articleId}
+  </select>
+  <select id="selectPasswordCheck" resultType="boolean" parameterMap="com.board.spring.yoony.article.ArticleDTO">
+    SELECT EXISTS(
+             SELECT 1
+             FROM article
+             WHERE article_id = #{articleId}
+               AND password = #{password} LIMIT 1
+             ) as success
+
+  </select>
+  <update id="updateArticle" parameterMap="com.board.spring.yoony.article.ArticleDTO">
+    UPDATE article
+    SET writer        = #{writer},
+        title         = #{title},
+        content       = #{content},
+        modified_date = current_timestamp()
+    WHERE article_id = #{articleId}
+      AND password = #{password}
+  </update>
+  <update id="updateArticleViewCount" parameterType="int">
+    UPDATE article
+    SET view_count = view_count + 1
+    WHERE article_id = #{articleId}
+  </update>
+  <delete id="deleteArticle" parameterMap="com.board.spring.yoony.article.ArticleDTO">
+    DELETE
+    FROM article
+    WHERE article_id = #{articleId}
+      AND password = #{password}
+  </delete>
+</mapper>

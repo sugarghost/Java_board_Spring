@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="row" th:if="" th:fragment="pagingFragment(pageDTO, searchManager)">
+  <div class="col-12">
+    <ul class="pagination d-flex justify-content-center">
+      <th:block  th:if="${pageDTO.startPageNum != 1}">
+        <li class="page-item">
+          <a class="page-link" th:href="|list.do?pageNum=1${searchManager.getSearchParamsQueryWithOutPageNum()}|"><<</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" th:href="|list.do?pageNum=${pageDTO.startPageNum - 1}${searchManager.getSearchParamsQueryWithOutPageNum()}|"><</a>
+        </li>
+      </th:block>
+      <th:block th:each="eachIndex : ${#numbers.sequence(pageDTO.startPageNum,pageDTO.endPageNum)}" >
+
+        <th:block th:if="${eachIndex == pageDTO.pageNum}">
+          <li class="page-item active">
+            <a class="page-link">${eachIndex}</a>
+          </li>
+        </th:block>
+        <th:block th:if="${eachIndex != pageDTO.pageNum && eachIndex <= pageDTO.totalPage}">
+          <li class="page-item">
+            <a class="page-link" th:href="|list.do?pageNum=${index}${searchManager.getSearchParamsQueryWithOutPageNum()}|">${eachIndex}</a>
+          </li>
+        </th:block>
+      </th:block>
+
+      <th:block th:if="${pageDTO.startPageNum+pageDTO.blockPage <= pageDTO.totalPage}">
+        <li class="page-item">
+          <a class="page-link" th:href="|list.do?pageNum=${pageDTO.startPageNum+pageDTO.blockPage}${searchManager.getSearchParamsQueryWithOutPageNum()}|">></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" th:href="|list.do?pageNum=${pageDTO.totalPage}${searchManager.getSearchParamsQueryWithOutPageNum()}|">>></a>
+        </li>
+      </th:block>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

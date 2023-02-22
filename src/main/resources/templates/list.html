@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="common/header :: headerFragment"/>
+  <title>자유게시판 - 목록</title>
+  <th:block th:replace="common/bootstrap :: bootstrapFragment"/>
+</head>
+<body>
+<div class="container-fluid">
+  <h1>자유게시판 - 목록</h1>
+  <form method="get" action="list.do">
+    <div class="row border align-content-center p-2">
+      <div class="col-1 align-self-center">
+        등록일
+      </div>
+      <div class="col-2">
+        <input type="date" class="form-control" name="startDate" value="${startDate}">
+      </div>
+      <div class="col-1 align-self-center text-center">
+        ~
+      </div>
+      <div class="col-2">
+        <input type="date" class="form-control" name="endDate" value="${endDate}">
+      </div>
+      <div class="col-2">
+        <select class="form-control" name="categoryId">
+          <option value="">카테고리</option>
+
+          <th:block th:each="category:${categoryList}">
+            <option th:value="${category.key}"
+                    th:text="${category.value}"
+                    th:attr="${category.key == categoryId? 'selected':''}"></option>
+          </th:block>
+        </select>
+      </div>
+      <div class="col-2">
+        <input type="text" class="form-control" name="searchWord"
+               placeholder="검색어 입력(제목+작성자+내용)"
+               th:value="${not #strings.isEmpty(searchWord) ? searchWord : ''}">
+      </div>
+      <div class="col-2">
+        <input type="hidden" name="pageNum" value="1">
+        <input type="submit" class="btn btn-primary" value="검색">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        총 ${pageDTO.getTotalCount()}건
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+
+        <table class="table">
+          <thead>
+          <tr>
+            <td>카테고리</td>
+            <td>제목</td>
+            <td>작성자</td>
+            <td>조회수</td>
+            <td>등록 일시</td>
+            <td>수정 일시</td>
+          </tr>
+          </thead>
+
+          <tbody th:if="${#lists.isEmpty(articleList)}">
+          <tr>
+            <td colspan="6">검색 결과가 없습니다.</td>
+          </tr>
+          </tbody>
+          <c:forEach items="${articleList}" var="articleDTO">
+            <tbody th:each="articleDTO: ${articleList}">
+            <tr>
+              <td>
+                [[${articleDTO.categoryName}]]
+              </td>
+              <td>
+                <a href="view.do?articleId=[[${articleDTO.getArticleId()}]][[${searchManager.getSearchParamsQuery()}]]">
+                  ${ValidationChecker.SubStringWithSkipMark(articleDTO.title, 80)}
+                </a>
+                <span>
+                                    [[${(articleDTO.isFileExist) ? "📎" : ""}]]
+                </span>
+              </td>
+              <td>[[${articleDTO.getWriter()}]]
+              </td>
+              <td>[[${articleDTO.getViewCount()}]]
+              </td>
+              <td>[[${(articleDTO.isCreatedDateValid()) ? articleDTO.getCreatedDate()
+                : "-" }]]
+              </td>
+              <td>[[${(articleDTO.isModifiedDateValid()) ? articleDTO.getModifiedDate()
+                : "-"}]]
+              </td>
+            </tr>
+            </tbody>
+          </c:forEach>
+        </table>
+      </div>
+    </div>
+    <th:block th:replace="common/paging :: pagingFragment(pageDTO, searchManager)">
+
+    </th:block>
+
+
+    <div class="row">
+      <div class="col-12 d-flex justify-content-end">
+        <input type="button" class="btn btn-primary" value="글쓰기"
+               onclick="location.href='write.do?${searchManager.getSearchParamsQuery()}'">
+      </div>
+    </div>
+  </form>
+</div>
+</body>
+</html>
