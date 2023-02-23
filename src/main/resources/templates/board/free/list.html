@@ -7,7 +7,16 @@
 </head>
 <body>
 <div class="container-fluid">
-  <h1>자유게시판 - 목록</h1>
+  <div>
+    [[#{hi}]]
+    <br>
+    [[#{hello}]]
+    <br>
+    [(#{hello})]
+    <br>
+    [(#{list.title})]
+  </div>
+  <h1 th:text="#{list.title}"></h1>
   <form method="get" action="list.do">
     <div class="row border align-content-center p-2">
       <div class="col-1 align-self-center">

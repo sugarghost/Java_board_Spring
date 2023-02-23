@@ -28,7 +28,7 @@ public class ArticleListCommand implements MainCommand {
   @Override
   public String execute(HttpServletRequest request, Map<String, Object> paramMap, Map<String, Object> viewModel) {
     logger.debug("execute()");
-    String viewPage = "list";
+    String viewPage = "board/free/list";
     try {
       ArticleDAO articleDAO = sqlSessionTemplate.getMapper(ArticleDAO.class);
       CategoryMapper categoryMapper = sqlSessionTemplate.getMapper(CategoryMapper.class);

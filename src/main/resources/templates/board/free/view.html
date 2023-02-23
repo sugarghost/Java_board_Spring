@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="common/header :: headerFragment"/>
+  <title>자유게시판 - 목록</title>
+  <th:block th:replace="common/bootstrap :: bootstrapFragment"/>
+</head>
+<body>
+<div class="container">
+  <h1>자유게시판 - 보기</h1>
+  <div class="row d-flex">
+    <div class="m-2 mr-auto">${articleDTO.writer}</div>
+    <div class="m-2">
+      등록일시
+      <span th:text="${#temporals.format(articleDTO.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+    <div class="m-2">
+      수정일시
+      <span
+          th:text="${articleDTO.isModifiedDateValid()} ?
+          ${#temporals.format(articleDTO.modifiedDate, 'yyyy-MM-dd HH:mm')} :
+           '-' "></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="m-2">[[[${articleDTO.categoryName}]]]</div>
+    <div class="m-2 mr-auto text-break">[[${articleDTO.title}]]</div>
+    <div class="m-2">조회수: [[${articleDTO.viewCount}]]</div>
+  </div>
+  <hr>
+  <div class="row my-3">
+    <div class="w-100 border text-break">
+      [[${articleDTO.content}]]
+    </div>
+  </div>
+  <div class="row">
+    <div class="w-100">
+      <th:block th:if="${articleDTO.isFileExist}" th:each="fileDTO:${fileList}">
+        <a th:href="|file_download_action.do?fileId=${fileDTO.fileId}&articleId=${fileDTO.articleId}|">[[${fileDTO.fileOriginName}]]</a>
+        <br>
+      </th:block>
+    </div>
+  </div>
+  <div class="row bg-light">
+    <div class="col-12">
+      <th:block th:each="commentDTO:${commentList}">
+        <div class="row justify-content-start px-2 pt-2">
+          [[${commentDTO.createdDate}]]
+        </div>
+        <div class="row border-bottom px-2 pb-3 text-break">
+          [[${commentDTO.content}]]
+        </div>
+      </th:block>
+      <form th:action="|comment_write_action.do?${searchManager.getSearchParamsQuery()}|"
+            method="post" class="w-100"
+            id="commentForm"
+            onsubmit="return validateForm(this);">
+        <div class="row py-3">
+          <div class="col-10">
+            <input type="hidden" name="articleId" th:value="${articleDTO.articleId}">
+            <textarea class="form-control w-100 h-100 m-auto" name="content"
+                      placeholder="댓글을 입력해 주세요."></textarea>
+
+          </div>
+          <div class="col-2">
+            <button type="submit" class="btn btn-primary w-100 h-100 m-auto">
+              등록
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="w-100 d-flex justify-content-center">
+      <button type="button" class="btn btn-primary"
+              onclick="location.href = 'list.do?[[${searchManager.getSearchParamsQuery()}]]'">목록
+      </button>
+      <button type="button" class="btn border"
+              onclick="location.href = 'modify.do?articleId=[[${articleDTO.articleId}]][[${searchManager.getSearchParamsQuery()}]]'">
+        수정
+      </button>
+      <button type="button" class="btn border" data-toggle="modal"
+              data-target="#passwordCheckModal">삭제
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 패스워드 체크 Modal -->
+<div class="modal fade" id="passwordCheckModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <form th:action="|delete_action.do?${searchManager.getSearchParamsQuery()}|" method="post"
+            class="w-100">
+        <input type="hidden" name="articleId" th:value="${articleDTO.articleId}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="passwordCheckModalTitle">비밀번호 확인</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="col-2">
+            비밀번호 *
+          </div>
+          <div class="col-10">
+            <input type="password" class="form-control" name="password"
+                   placeholder="비밀번호를 입력해 주세요.">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+          </button>
+          <button type="submit" class="btn btn-primary">확인</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+
+  function validateForm(form) {
+    if (form.content.value == "" || !/^.{1,255}$/g.test(form.content.value)) {
+      alert("댓글을 1글자 이상, 255글자 미만으로 입력해주세요.");
+      form.content.focus();
+      return false;
+    }
+  }
+
+</script>
+</body>
+</html>
