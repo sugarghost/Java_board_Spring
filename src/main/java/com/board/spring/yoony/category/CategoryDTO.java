@@ -1,22 +1,15 @@
 package com.board.spring.yoony.category;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.ibatis.type.Alias;
 
-/**
- * 카테고리 DTO
- *
- * @author yoony
- * @version 1.0
- * @see CategoryDAO
- * @since 2023. 02. 15.
- */
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
+
+@Data
+@Alias("CategoryDTO")
 public class CategoryDTO {
 
   // 카테고리 ID(auto increment)

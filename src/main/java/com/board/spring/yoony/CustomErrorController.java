@@ -11,14 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * 설명
- *
- * @author YK
- * @version 1.0
- * @fileName CustomErrorController
- * @since 2023-02-22
- */
+
 @Controller
 public class CustomErrorController implements ErrorController {
 

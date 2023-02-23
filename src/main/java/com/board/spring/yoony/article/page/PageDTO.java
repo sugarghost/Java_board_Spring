@@ -1,57 +1,22 @@
 package com.board.spring.yoony.article.page;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * 페이징 처리를 위한 DTO 클래스
- *
- * @author yoony
- * @version 1.0
- * @since 2023. 02. 17.
- */
-@Getter
-@Setter
-@ToString
+@Data
 public class PageDTO {
 
-  // TODO: 한줄짜리 설명 주석도 javadoc 주석으로 변경해야함
-  // 페이지 번호
   private int pageNum;
-  // 페이지당 보여줄 게시물 수
   private int pageSize;
-  // 페이지 블록당 보여줄 페이지 수(limit에서 활용)
   private int blockPage;
-  // 전체 게시물 수
   private int totalCount;
-  // 전체 페이지 수
   private int totalPage;
-  // 페이지 블록의 시작 페이지 번호
   private int startPageNum;
-  // 페이지 블록의 끝 페이지 번호
   private int endPageNum;
-  // 페이지 번호에 따른 시작 게시물 번호(offset에서 활용)
   private int startRowNum;
 
-  /**
-   * 기본 생성자
-   *
-   * @author yoony
-   * @version 1.0
-   * @since 2023. 02. 17.
-   */
-  public PageDTO() {
-  }
-
-  /**
-   * 페이지네이션 구성시 자동으로 필요 정보를 계산해주는 생성자
-   *
-   * @param pageNum    페이지 번호
-   * @param pageSize   페이지당 보여줄 게시물 수
-   * @param blockPage  페이지 블록당 보여줄 페이지 수
-   * @param totalCount 전체 게시물 수
-   */
   public PageDTO(int pageNum, int pageSize, int blockPage, int totalCount) {
     this.pageNum = pageNum;
     this.pageSize = pageSize;

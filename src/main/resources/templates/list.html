@@ -14,29 +14,29 @@
         등록일
       </div>
       <div class="col-2">
-        <input type="date" class="form-control" name="startDate" value="${startDate}">
+        <input type="date" class="form-control" name="startDate" value="${searchManager.startDate}">
       </div>
       <div class="col-1 align-self-center text-center">
         ~
       </div>
       <div class="col-2">
-        <input type="date" class="form-control" name="endDate" value="${endDate}">
+        <input type="date" class="form-control" name="endDate" value="${searchManager.endDate}">
       </div>
       <div class="col-2">
         <select class="form-control" name="categoryId">
           <option value="">카테고리</option>
 
-          <th:block th:each="category:${categoryList}">
-            <option th:value="${category.key}"
-                    th:text="${category.value}"
-                    th:attr="${category.key == categoryId? 'selected':''}"></option>
+          <th:block th:each="categoryDTO:${categoryList}">
+            <option th:value="${categoryDTO.categoryId}"
+                    th:text="${categoryDTO.name}"
+                    th:selected="${categoryDTO.categoryId} == ${searchManager.categoryId}"></option>
           </th:block>
         </select>
       </div>
       <div class="col-2">
         <input type="text" class="form-control" name="searchWord"
                placeholder="검색어 입력(제목+작성자+내용)"
-               th:value="${not #strings.isEmpty(searchWord) ? searchWord : ''}">
+               th:value="${not #strings.isEmpty(searchManager.searchWord) ? searchManager.searchWord : ''}">
       </div>
       <div class="col-2">
         <input type="hidden" name="pageNum" value="1">
@@ -45,7 +45,7 @@
     </div>
     <div class="row">
       <div class="col-12">
-        총 ${pageDTO.getTotalCount()}건
+        총 [[${pageDTO.totalCount}]]건
       </div>
     </div>
     <div class="row">
@@ -68,45 +68,42 @@
             <td colspan="6">검색 결과가 없습니다.</td>
           </tr>
           </tbody>
-          <c:forEach items="${articleList}" var="articleDTO">
-            <tbody th:each="articleDTO: ${articleList}">
-            <tr>
-              <td>
-                [[${articleDTO.categoryName}]]
-              </td>
-              <td>
-                <a href="view.do?articleId=[[${articleDTO.getArticleId()}]][[${searchManager.getSearchParamsQuery()}]]">
-                  ${ValidationChecker.SubStringWithSkipMark(articleDTO.title, 80)}
-                </a>
-                <span>
+          <tbody>
+          <tr th:each="articleDTO: ${articleList}">
+            <td>
+              [[${articleDTO.categoryName}]]
+            </td>
+            <td>
+              <a th:href="|view.do?articleId=${articleDTO.articleId}${searchManager.searchParamsQuery}|"
+                 th:text="${@validationChecker.SubStringWithSkipMark(articleDTO.title, 80)}">
+
+              </a>
+              <span>
                                     [[${(articleDTO.isFileExist) ? "📎" : ""}]]
                 </span>
-              </td>
-              <td>[[${articleDTO.getWriter()}]]
-              </td>
-              <td>[[${articleDTO.getViewCount()}]]
-              </td>
-              <td>[[${(articleDTO.isCreatedDateValid()) ? articleDTO.getCreatedDate()
-                : "-" }]]
-              </td>
-              <td>[[${(articleDTO.isModifiedDateValid()) ? articleDTO.getModifiedDate()
-                : "-"}]]
-              </td>
-            </tr>
-            </tbody>
-          </c:forEach>
+            </td>
+            <td>[[${articleDTO.writer}]]
+            </td>
+            <td>[[${articleDTO.viewCount}]]
+            </td>
+            <td>[[${(articleDTO.isCreatedDateValid()) ? articleDTO.createdDate
+              : "-" }]]
+            </td>
+            <td>[[${(articleDTO.isModifiedDateValid()) ? articleDTO.modifiedDate
+              : "-"}]]
+            </td>
+          </tr>
+          </tbody>
         </table>
       </div>
     </div>
-    <th:block th:replace="common/paging :: pagingFragment(pageDTO, searchManager)">
+    <th:block th:replace="common/paging :: pagingFragment(${pageDTO}, ${searchManager})">
 
     </th:block>
-
-
     <div class="row">
       <div class="col-12 d-flex justify-content-end">
         <input type="button" class="btn btn-primary" value="글쓰기"
-               onclick="location.href='write.do?${searchManager.getSearchParamsQuery()}'">
+               onclick="location.href='write.do?${searchManager.searchParamsQuery}'">
       </div>
     </div>
   </form>

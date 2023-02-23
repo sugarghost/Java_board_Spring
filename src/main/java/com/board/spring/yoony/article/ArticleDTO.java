@@ -2,16 +2,11 @@ package com.board.spring.yoony.article;
 
 import java.sql.Date;
 import lombok.Data;
+import org.apache.ibatis.type.Alias;
 
-/**
- * 게시글 DTO
- *
- * @author yoony
- * @version 1.0
- * @see ArticleDAO
- * @since 2023. 02. 21.
- */
+
 @Data
+@Alias("ArticleDTO")
 public class ArticleDTO {
 
   // 게시글 ID(auto increment)
