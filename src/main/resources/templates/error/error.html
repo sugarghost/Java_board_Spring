@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>ERROR</title>
+  <th:block th:replace="common/header :: headerFragment"/>
+  <title>Error Page</title>
+  <th:block th:replace="common/bootstrap :: bootstrapFragment"/>
 </head>
+
 <body>
-<div>
-  <h1>Error Page</h1>
-  error code : <span th:text="${code}"></span>
-  <br>error msg : <span th:text="${msg}"></span>
+<div class="d-flex align-items-center justify-content-center vh-100">
+  <div class="text-center row">
+    [[${exception}]]
+    <div class=" col-md-6">
+      <h1 class="display-1 fw-bold">error code</h1>
+    </div>
+    <div class=" col-md-6 mt-5">
+      <p class="fs-3"> <span class="text-danger">Opps!</span> Page not found.</p>
+      <p class="lead">
+        The page you’re looking for doesn’t exist.
+      </p>
+      <a href="list.do" class="btn btn-primary">Go Home</a>
+    </div>
+  </div>
 </div>
 </body>
 </html>

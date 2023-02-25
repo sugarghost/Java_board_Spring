@@ -9,21 +9,21 @@
 <div class="container">
   <h1>자유게시판 - 보기</h1>
   <div class="row d-flex">
-    <div class="m-2 mr-auto">${articleDTO.writer}</div>
+    <div class="m-2 mr-auto" th:text="${articleDTO.writer}"></div>
     <div class="m-2">
       등록일시
-      <span th:text="${#temporals.format(articleDTO.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+      <span th:text="${#dates.format(articleDTO.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
     </div>
     <div class="m-2">
       수정일시
       <span
           th:text="${articleDTO.isModifiedDateValid()} ?
-          ${#temporals.format(articleDTO.modifiedDate, 'yyyy-MM-dd HH:mm')} :
+          ${#dates.format(articleDTO.modifiedDate, 'yyyy-MM-dd HH:mm')} :
            '-' "></span>
     </div>
   </div>
   <div class="row">
-    <div class="m-2">[[[${articleDTO.categoryName}]]]</div>
+    <div class="m-2" th:text="|[${articleDTO.categoryName}]|"></div>
     <div class="m-2 mr-auto text-break">[[${articleDTO.title}]]</div>
     <div class="m-2">조회수: [[${articleDTO.viewCount}]]</div>
   </div>
@@ -36,34 +36,38 @@
   <div class="row">
     <div class="w-100">
       <th:block th:if="${articleDTO.isFileExist}" th:each="fileDTO:${fileList}">
-        <a th:href="|file_download_action.do?fileId=${fileDTO.fileId}&articleId=${fileDTO.articleId}|">[[${fileDTO.fileOriginName}]]</a>
+        <a href="javascript:void(0);"
+           th:onclick="|fileDownload(${fileDTO.fileId}, ${fileDTO.articleId})|">
+          [[${fileDTO.fileOriginName}]]
+        </a>
         <br>
       </th:block>
     </div>
   </div>
   <div class="row bg-light">
     <div class="col-12">
-      <th:block th:each="commentDTO:${commentList}">
-        <div class="row justify-content-start px-2 pt-2">
-          [[${commentDTO.createdDate}]]
-        </div>
-        <div class="row border-bottom px-2 pb-3 text-break">
-          [[${commentDTO.content}]]
-        </div>
-      </th:block>
-      <form th:action="|comment_write_action.do?${searchManager.getSearchParamsQuery()}|"
-            method="post" class="w-100"
-            id="commentForm"
-            onsubmit="return validateForm(this);">
+      <div id="commentList">
+        <th:block th:if="${commentList != null}" th:each="commentDTO:${commentList}">
+          <div class="row justify-content-start px-2 pt-2"
+               th:text="${#dates.format(commentDTO.createdDate, 'yyyy-MM-dd HH:mm')}">
+          </div>
+          <div class="row border-bottom px-2 pb-3 text-break">
+            [[${commentDTO.content}]]
+          </div>
+        </th:block>
+      </div>
+      <form method="post" class="w-100"
+            id="commentForm">
         <div class="row py-3">
           <div class="col-10">
             <input type="hidden" name="articleId" th:value="${articleDTO.articleId}">
-            <textarea class="form-control w-100 h-100 m-auto" name="content"
+            <textarea id="commentContent" class="form-control w-100 h-100 m-auto" name="content"
                       placeholder="댓글을 입력해 주세요."></textarea>
 
           </div>
           <div class="col-2">
-            <button type="submit" class="btn btn-primary w-100 h-100 m-auto">
+            <button type="button" class="btn btn-primary w-100 h-100 m-auto"
+                    onclick="validateCommentForm()">
               등록
             </button>
           </div>
@@ -77,7 +81,7 @@
               th:onclick="movePage('list.do?')">목록
       </button>
       <button type="button" class="btn border"
-              th:onclick="|movePage('modify.do?articleId=${articleDTO.articleId}')|">글쓰기
+              th:onclick="|movePage('modify.do?articleId=${articleDTO.articleId}')|">
         수정
       </button>
       <button type="button" class="btn border" data-toggle="modal"
@@ -91,7 +95,7 @@
 <div class="modal fade" id="passwordCheckModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form th:action="|delete_action.do?${searchManager.getSearchParamsQuery()}|" method="post"
+      <form id="deleteForm" method="post"
             class="w-100">
         <input type="hidden" name="articleId" th:value="${articleDTO.articleId}">
         <div class="modal-header">
@@ -112,7 +116,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
           </button>
-          <button type="submit" class="btn btn-primary">확인</button>
+          <button type="button" class="btn btn-primary" onclick="articleDeleteAjax()">확인</button>
         </div>
       </form>
     </div>
@@ -121,14 +125,90 @@
 <script>
 
   function movePage(pageName) {
-    location.href = pageName + '[[${searchManager.getSearchParamsQuery()}]]';
+    location.href = pageName + '[(${searchManager.getSearchParamsQuery()})]';
   }
-  function validateForm(form) {
+
+  function fileDownload(fileId, articleId) {
+    $.ajax({
+      url: '/file_download.do',
+      method: 'GET',
+      data: {
+        fileId: fileId,
+        articleId: articleId
+      },
+      xhrFields: {
+        responseType: 'blob'
+      },
+      success: function (data, textStatus, jqXHR) {
+        var blob = new Blob([data], {type: data.type});
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = jqXHR.getResponseHeader('Content-Disposition').split('filename=')[1];
+        link.click();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseText);
+      }
+    });
+  }
+
+  function articleDeleteAjax() {
+    let form = $('#deleteForm')[0];
+    let formData = new FormData(form);
+    $.ajax({
+      url: 'delete_action.do',
+      type: 'post',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        movePage('list.do?');
+      },
+      error: function (xhr, status, error) {
+        alert(xhr.responseText);
+      }
+    });
+  }
+
+  function commentInsertAjax(form) {
+    let formData = new FormData(form);
+    $('#commentContent').val('');
+    $.ajax({
+      url: 'comment_write_action.do',
+      type: 'post',
+      data: formData,
+      dataType: 'json',
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        let commentList = $('#commentList');
+        commentList.empty();
+        for (i = 0; i < data.commentList.length; i++) {
+          var comment = "" +
+              "<div class=\"row justify-content-start px-2 pt-2\">" +
+              data.commentList[i].createdDate +
+              "</div>" +
+              "<div class=\"row border-bottom px-2 pb-3 text-break\">" +
+              data.commentList[i].content +
+              "</td>"
+          commentList.append(comment);
+        }
+      },
+      error: function (xhr, status, error) {
+        alert(xhr.responseText);
+      }
+    });
+  }
+
+  function validateCommentForm() {
+    let form = $("#commentForm")[0];
+
     if (form.content.value == "" || !/^.{1,255}$/g.test(form.content.value)) {
       alert("댓글을 1글자 이상, 255글자 미만으로 입력해주세요.");
       form.content.focus();
       return false;
     }
+    commentInsertAjax(form);
   }
 
 </script>

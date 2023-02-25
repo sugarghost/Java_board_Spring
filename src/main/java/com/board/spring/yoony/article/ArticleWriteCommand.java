@@ -2,6 +2,7 @@ package com.board.spring.yoony.article;
 
 import com.board.spring.yoony.category.CategoryDTO;
 import com.board.spring.yoony.category.CategoryMapper;
+import com.board.spring.yoony.command.DependencyCommand;
 import com.board.spring.yoony.command.MainCommand;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ArticleWriteCommand implements MainCommand {
 
-  private Logger logger = LogManager.getLogger(ArticleWriteCommand.class);
+  private Logger logger = LogManager.getLogger(this.getClass());
 
-  @Autowired
-  private final SqlSessionTemplate sqlSessionTemplate;
+
+  private final DependencyCommand dependencyCommand;
 
   @Override
   public String execute(HttpServletRequest request, Map<String, Object> paramMap,
@@ -28,7 +29,7 @@ public class ArticleWriteCommand implements MainCommand {
     logger.debug("execute()");
     String viewPage = "board/free/write";
     // MyBatis mapper 가져옴
-    CategoryMapper categoryMapper = sqlSessionTemplate.getMapper(CategoryMapper.class);
+    CategoryMapper categoryMapper = dependencyCommand.getSqlSessionTemplate().getMapper(CategoryMapper.class);
 
     List<CategoryDTO> categoryList = categoryMapper.selectCategoryList();
     request.setAttribute("categoryList", categoryList);

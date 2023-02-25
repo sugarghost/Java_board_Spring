@@ -1,10 +1,14 @@
 package com.board.spring.yoony.error;
 
+import java.util.HashMap;
+import javax.servlet.RequestDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 설명
@@ -15,9 +19,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @since 2023-02-24
  */
 @Slf4j
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
+  @ExceptionHandler(CustomExceptionView.class)
+  public ModelAndView handleCustomExceptionView(CustomExceptionView ex) {
+    log.error("handleCustomExceptionView", ex);
+
+    ModelAndView modelAndView = new ModelAndView();
+    ex.getErrorCode().getErrorCode();
+
+    modelAndView.addObject("exception", ex);
+    modelAndView.setViewName("error/error");
+    return modelAndView;
+  }
   @ExceptionHandler(CustomException.class)
   public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
     log.error("handleCustomException", ex);
@@ -26,9 +41,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+  public ModelAndView handleException(Exception ex) {
     log.error("handleException", ex);
-    ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
-    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    ModelAndView modelAndView = new ModelAndView();
+
+    modelAndView.addObject("exception", ex);
+    modelAndView.setViewName("error/error");
+    return modelAndView;
   }
 }

@@ -13,7 +13,7 @@ import org.apache.ibatis.type.Alias;
 public class CategoryDTO {
 
   // 카테고리 ID(auto increment)
-  private int categoryId;
+  private long categoryId;
   // 카테고리 이름
   private String name;
 

@@ -15,9 +15,12 @@ public class RequestUtil {
   }
 
 
-  public static int getIntParameter(HttpServletRequest request, String key) {
-    return ValidationChecker.isEmpty(request.getParameter(key)) ? 0
-        : Integer.parseInt(request.getParameter(key));
+  public static int getIntParameter(String requestParameter) {
+    return ValidationChecker.isEmpty(requestParameter) ? 0
+        : Integer.parseInt(requestParameter);
   }
-
+  public static long getLongParameter(String requestParameter) {
+    return ValidationChecker.isEmpty(requestParameter) ? 0
+        : Long.parseLong(requestParameter);
+  }
 }

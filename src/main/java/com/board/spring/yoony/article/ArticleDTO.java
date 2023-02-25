@@ -10,9 +10,9 @@ import org.apache.ibatis.type.Alias;
 public class ArticleDTO {
 
   // 게시글 ID(auto increment)
-  private Long articleId;
+  private long articleId;
   // 카테고리 ID(foreign key: category table)
-  private int categoryId;
+  private long categoryId;
   // 카테고리 이름(DB상에 컬럼은 존재하지 않고 DTO에만 존재)
   private String categoryName;
   // 작성자(3~4자)
@@ -118,5 +118,9 @@ public class ArticleDTO {
         && isPasswordValid()
         && isTitleValid()
         && isContentValid();
+  }
+
+  public boolean isFileExist() {
+    return isFileExist;
   }
 }

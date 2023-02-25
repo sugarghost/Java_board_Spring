@@ -64,4 +64,62 @@
     ORDER BY article_id DESC
     LIMIT #{pageSize} OFFSET #{rowStart}
   </select>
+
+  <select id="selectArticle" resultType="com.board.spring.yoony.article.ArticleDTO" parameterType="long">
+    SELECT article_id,
+           category_id,
+           (SELECT name
+            FROM category
+            WHERE category_id = article.category_id LIMIT 1) AS category_name,
+           writer,
+           password,
+           title,
+           content,
+           view_count,
+           created_date,
+           modified_date,
+           (SELECT EXISTS(SELECT 1
+                          FROM article_file
+                          WHERE article_id = article.article_id)) AS is_file_exist
+    FROM article
+    WHERE article_id = #{articleId}
+  </select>
+  <select id="selectArticleCheck" resultType="boolean" parameterType="long">
+    SELECT EXISTS(
+             SELECT 1
+             FROM article
+             WHERE article_id = #{articleId}
+             LIMIT 1
+             ) as success
+
+  </select>
+  <select id="selectPasswordCheck" resultType="boolean" parameterType="com.board.spring.yoony.article.ArticleDTO">
+    SELECT EXISTS(
+             SELECT 1
+             FROM article
+             WHERE article_id = #{articleId}
+               AND password = #{password} LIMIT 1
+             ) as success
+
+  </select>
+  <update id="updateArticle" parameterType="com.board.spring.yoony.article.ArticleDTO">
+    UPDATE article
+    SET writer        = #{writer},
+        title         = #{title},
+        content       = #{content},
+        modified_date = current_timestamp()
+    WHERE article_id = #{articleId}
+      AND password = #{password}
+  </update>
+  <update id="updateArticleViewCount" parameterType="long">
+    UPDATE article
+    SET view_count = view_count + 1
+    WHERE article_id = #{articleId}
+  </update>
+  <delete id="deleteArticle" parameterType="com.board.spring.yoony.article.ArticleDTO">
+    DELETE
+    FROM article
+    WHERE article_id = #{articleId}
+      AND password = #{password}
+  </delete>
 </mapper>

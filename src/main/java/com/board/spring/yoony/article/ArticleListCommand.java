@@ -1,5 +1,6 @@
 package com.board.spring.yoony.article;
 
+import com.board.spring.yoony.command.DependencyCommand;
 import com.board.spring.yoony.command.MainCommand;
 import com.board.spring.yoony.article.page.PageDTO;
 import com.board.spring.yoony.category.CategoryMapper;
@@ -21,16 +22,15 @@ public class ArticleListCommand implements MainCommand {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Autowired
-  private final SqlSessionTemplate sqlSessionTemplate;
+  private final DependencyCommand dependencyCommand;
 
   @Override
   public String execute(HttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> viewModel) {
     logger.debug("execute()");
     String viewPage = "board/free/list";
-      ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
-      CategoryMapper categoryMapper = sqlSessionTemplate.getMapper(CategoryMapper.class);
+      ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate().getMapper(ArticleMapper.class);
+      CategoryMapper categoryMapper = dependencyCommand.getSqlSessionTemplate().getMapper(CategoryMapper.class);
 
       List<CategoryDTO> categoryList = categoryMapper.selectCategoryList();
       viewModel.put("categoryList", categoryList);
@@ -40,7 +40,7 @@ public class ArticleListCommand implements MainCommand {
       int pageSize = 5;
       int blockSize = 10;
 
-      int pageNum = RequestUtil.getIntParameter(request, "pageNum");
+      int pageNum = RequestUtil.getIntParameter(request.getParameter("pageNum"));
       if (pageNum == 0) {
         pageNum = 1;
       }

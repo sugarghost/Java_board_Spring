@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class UnknownActionCommand implements ActionCommand {
 
   @Override
-  public void execute(MultipartHttpServletRequest request, Map<String, Object> paramMap,
+  public void execute(HttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> viewModel)
       throws ServletException, IOException {
   }

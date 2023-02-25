@@ -96,13 +96,13 @@
   }
 
   function submitFormAjax(form) {
-    let formData = new FormData(form)[0];
+    let formData = new FormData(form);
     $.ajax({
-      url: "/writeAction.do",
+      url: "/write_action.do",
       type: "post",
       data: formData,
-      dataType:'json',
-      async: false,
+      contentType: false,
+      processData: false,
       success: function(data){
         location.href = "list.do?";
       },
