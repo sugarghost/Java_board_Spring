@@ -5,7 +5,6 @@ import com.board.spring.yoony.article.page.PageDTO;
 import com.board.spring.yoony.category.CategoryMapper;
 import com.board.spring.yoony.category.CategoryDTO;
 import com.board.spring.yoony.util.RequestUtil;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +25,18 @@ public class ArticleListCommand implements MainCommand {
   private final SqlSessionTemplate sqlSessionTemplate;
 
   @Override
-  public String execute(HttpServletRequest request, Map<String, Object> paramMap, Map<String, Object> viewModel) {
+  public String execute(HttpServletRequest request, Map<String, Object> paramMap,
+      Map<String, Object> viewModel) {
     logger.debug("execute()");
     String viewPage = "board/free/list";
-    try {
-      ArticleDAO articleDAO = sqlSessionTemplate.getMapper(ArticleDAO.class);
+      ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
       CategoryMapper categoryMapper = sqlSessionTemplate.getMapper(CategoryMapper.class);
 
       List<CategoryDTO> categoryList = categoryMapper.selectCategoryList();
       viewModel.put("categoryList", categoryList);
 
       // 페이지네이션 구현
-      int totalCount = articleDAO.selectArticleCount(paramMap);
+      int totalCount = articleMapper.selectArticleCount(paramMap);
       int pageSize = 5;
       int blockSize = 10;
 
@@ -51,12 +50,8 @@ public class ArticleListCommand implements MainCommand {
       paramMap.put("pageSize", pageSize);
 
       // 검색조건에 따른 게시글 가져옴
-      List<ArticleDTO> articleList = articleDAO.selectArticleList(paramMap);
+      List<ArticleDTO> articleList = articleMapper.selectArticleList(paramMap);
       viewModel.put("articleList", articleList);
-    } catch (Exception e) {
-      logger.error(e.getMessage());
-      e.printStackTrace();
-    }
     return viewPage;
   }
 }

@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-public class UnknownMainCommand implements MainCommand {
+public class UnknownActionCommand implements ActionCommand {
 
   @Override
-  public String execute(HttpServletRequest request, Map<String, Object> paramMap,
+  public void execute(MultipartHttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> viewModel)
       throws ServletException, IOException {
-    return "error/error";
   }
 }

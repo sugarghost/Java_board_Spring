@@ -29,8 +29,9 @@ public class SearchManager {
     this.startDate = !ValidationChecker.isEmpty(startDate) ? startDate : "";
     this.endDate = !ValidationChecker.isEmpty(endDate) ? endDate : "";
   }
-  public Map<String,Object> getSearchParamsMap(){
-    Map<String,Object> searchParams = new HashMap<>();
+
+  public Map<String, Object> getSearchParamsMap() {
+    Map<String, Object> searchParams = new HashMap<>();
     if (!ValidationChecker.isEmpty(pageNum)) {
       searchParams.put("pageNum", pageNum);
     }
@@ -48,6 +49,7 @@ public class SearchManager {
     }
     return searchParams;
   }
+
   public String getSearchParamsQuery() throws UnsupportedEncodingException {
     String searchParams = "";
     if (!ValidationChecker.isEmpty(pageNum)) {

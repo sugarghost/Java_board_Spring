@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-public interface MainCommand {
+public interface ActionCommand {
 
-  String execute(HttpServletRequest request, Map<String, Object> paramMap,
+  void execute(MultipartHttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> viewModel)
       throws ServletException, IOException;
 }

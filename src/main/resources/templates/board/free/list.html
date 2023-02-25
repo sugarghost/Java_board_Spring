@@ -7,15 +7,6 @@
 </head>
 <body>
 <div class="container-fluid">
-  <div>
-    [[#{hi}]]
-    <br>
-    [[#{hello}]]
-    <br>
-    [(#{hello})]
-    <br>
-    [(#{list.title})]
-  </div>
   <h1 th:text="#{list.title}"></h1>
   <form method="get" action="list.do">
     <div class="row border align-content-center p-2">
@@ -83,7 +74,7 @@
               [[${articleDTO.categoryName}]]
             </td>
             <td>
-              <a th:href="|view.do?articleId=${articleDTO.articleId}${searchManager.searchParamsQuery}|"
+              <a th:href="|view.do?articleId=${articleDTO.articleId}${searchManager.getSearchParamsQuery()}|"
                  th:text="${@validationChecker.SubStringWithSkipMark(articleDTO.title, 80)}">
 
               </a>
@@ -112,10 +103,16 @@
     <div class="row">
       <div class="col-12 d-flex justify-content-end">
         <input type="button" class="btn btn-primary" value="글쓰기"
-               onclick="location.href='write.do?${searchManager.searchParamsQuery}'">
+               onclick="movePage('write.do?')"
+        />
       </div>
     </div>
   </form>
+  <script>
+    function movePage(pageName) {
+      location.href = pageName + '[(${searchManager.getSearchParamsQuery()})]';
+    }
+  </script>
 </div>
 </body>
 </html>

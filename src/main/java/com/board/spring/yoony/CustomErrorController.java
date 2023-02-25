@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class CustomErrorController implements ErrorController {
 
-  private static String IMAGE_PATH = "images/error/";
+  private static final String IMAGE_PATH = "images/error/";
 
   @ExceptionHandler(Throwable.class)
   @RequestMapping("/error")
-  public String handleError(HttpServletRequest request, HttpServletResponse response,  Model model) {
+  public String handleError(HttpServletRequest request, HttpServletResponse response, Model model) {
     Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
     int statusCode = Integer.parseInt(status.toString());

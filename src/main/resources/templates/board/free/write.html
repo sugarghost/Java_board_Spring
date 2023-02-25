@@ -9,10 +9,8 @@
 <body>
 <div class="container">
   <h1>자유게시판 - 등록</h1>
-  <form name="articleForm" method="post"
-        action="writeAction.do?"
-        enctype="multipart/form-data"
-        onsubmit="return validateForm(this);">
+  <form id="articleForm" name="articleForm" method="post"
+        enctype="multipart/form-data">
 
     <table class="table">
       <tbody>
@@ -84,19 +82,41 @@
     </table>
     <div>
       <button type="button" class="btn border float-left"
-              onclick="location.href = 'list.do?[[${searchManager.getSearchParamsQuery()}]]'">취소
+              onclick="movePage('list.do?')">취소
       </button>
     </div>
     <div>
-      <button type="submit" class="btn btn-primary float-right">저장</button>
+      <button type="button" class="btn btn-primary float-right" onclick="validateForm()">저장</button>
     </div>
   </form>
 </div>
 <script>
-  function validateForm(form) {
-    if (form.category.value == "") {
+  function movePage(pageName) {
+    location.href = pageName + '[(${searchManager.getSearchParamsQuery()})]';
+  }
+
+  function submitFormAjax(form) {
+    let formData = new FormData(form)[0];
+    $.ajax({
+      url: "/writeAction.do",
+      type: "post",
+      data: formData,
+      dataType:'json',
+      async: false,
+      success: function(data){
+        location.href = "list.do?";
+      },
+      error: function(xhr, status, error){
+        alert(xhr.responseText);
+      }
+    });
+  }
+
+  function validateForm() {
+    let form = $("#articleForm")[0];
+    if (form.categoryId.value == "") {
       alert("카테고리를 선택해주세요.");
-      form.category.focus();
+      form.categoryId.focus();
       return false;
     }
     if (form.writer.value == "" || !/^.{3,4}$/g.test(form.writer.value)) {
@@ -126,6 +146,7 @@
       form.content.focus();
       return false;
     }
+    submitFormAjax(form);
   }
 
   // custom file input을 사용하며 선택한 파일 명을 update하기 위한 리스너

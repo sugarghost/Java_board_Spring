@@ -1,6 +1,7 @@
 package com.board.spring.yoony.command;
 
 import com.board.spring.yoony.article.ArticleListCommand;
+import com.board.spring.yoony.article.ArticleWriteCommand;
 import java.util.HashMap;
 import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -17,6 +18,7 @@ public class MainCommandHelper {
   public MainCommandHelper(SqlSessionTemplate sqlSessionTemplate) {
     this.sqlSessionTemplate = sqlSessionTemplate;
     this.commands.put("list", new ArticleListCommand(sqlSessionTemplate));
+    this.commands.put("write", new ArticleWriteCommand(sqlSessionTemplate));
   }
 
   public MainCommand getCommand(String command) {
