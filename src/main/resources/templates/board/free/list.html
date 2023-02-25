@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <th:block th:replace="common/header :: headerFragment"/>
-  <title>자유게시판 - 목록</title>
+  <title th:text="#{thymeleaf.list.title}">자유게시판 - 목록</title>
   <th:block th:replace="common/bootstrap :: bootstrapFragment"/>
 </head>
 <body>
 <div class="container-fluid">
-  <h1 th:text="#{list.title}"></h1>
+  <h1 th:text="#{thymeleaf.list.title}">자유게시판 - 목록</h1>
   <form method="get" action="list.do">
     <div class="row border align-content-center p-2">
-      <div class="col-1 align-self-center">
+      <div class="col-1 align-self-center" th:text="#{thymeleaf.list.search.createdDate}">
         등록일
       </div>
       <div class="col-2">
@@ -24,7 +24,7 @@
       </div>
       <div class="col-2">
         <select class="form-control" name="categoryId">
-          <option value="">카테고리</option>
+          <option value="" th:text="#{thymeleaf.list.search.category}">카테고리</option>
 
           <th:block th:each="categoryDTO:${categoryList}">
             <option th:value="${categoryDTO.categoryId}"
@@ -35,12 +35,12 @@
       </div>
       <div class="col-2">
         <input type="text" class="form-control" name="searchWord"
-               placeholder="검색어 입력(제목+작성자+내용)"
+               th:placeholder="#{thymeleaf.list.search.searchWord.placeholder}"
                th:value="${not #strings.isEmpty(searchManager.searchWord) ? searchManager.searchWord : ''}">
       </div>
       <div class="col-2">
         <input type="hidden" name="pageNum" value="1">
-        <input type="submit" class="btn btn-primary" value="검색">
+        <input type="submit" class="btn btn-primary" th:value="#{thymeleaf.list.search.submit}">
       </div>
     </div>
     <div class="row">
@@ -54,18 +54,18 @@
         <table class="table">
           <thead>
           <tr>
-            <td>카테고리</td>
-            <td>제목</td>
-            <td>작성자</td>
-            <td>조회수</td>
-            <td>등록 일시</td>
-            <td>수정 일시</td>
+            <td th:text="#{thymeleaf.list.table.category}">카테고리</td>
+            <td th:text="#{thymeleaf.list.table.title}">제목</td>
+            <td th:text="#{thymeleaf.list.table.writer}">작성자</td>
+            <td th:text="#{thymeleaf.list.table.viewCount}">조회수</td>
+            <td th:text="#{thymeleaf.list.table.createdDate}">등록 일시</td>
+            <td th:text="#{thymeleaf.list.table.modefiedDate}">수정 일시</td>
           </tr>
           </thead>
 
           <tbody th:if="${#lists.isEmpty(articleList)}">
           <tr>
-            <td colspan="6">검색 결과가 없습니다.</td>
+            <td colspan="6" th:text="#{thymeleaf.list.table.notFound}">검색 결과가 없습니다.</td>
           </tr>
           </tbody>
           <tbody>
@@ -102,7 +102,7 @@
     </th:block>
     <div class="row">
       <div class="col-12 d-flex justify-content-end">
-        <input type="button" class="btn btn-primary" value="글쓰기"
+        <input type="button" class="btn btn-primary" th:value="#{thymeleaf.list.form.write}"
                onclick="movePage('write.do?')"
         />
       </div>

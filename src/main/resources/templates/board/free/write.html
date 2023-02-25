@@ -2,23 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <th:block th:replace="common/header :: headerFragment"/>
-  <title>자유게시판 - 목록</title>
+  <title th:text="#{thymeleaf.write.title}">자유게시판 - 등록</title>
   <th:block th:replace="common/bootstrap :: bootstrapFragment"/>
 </head>
 
 <body>
 <div class="container">
-  <h1>자유게시판 - 등록</h1>
+  <h1 th:text="#{thymeleaf.write.title}">자유게시판 - 등록</h1>
   <form id="articleForm" name="articleForm" method="post"
         enctype="multipart/form-data">
 
     <table class="table">
       <tbody>
       <tr>
-        <td class="bg-light">카테고리 *</td>
+        <td class="bg-light" th:text="#{thymeleaf.write.form.category}">카테고리 *</td>
         <td>
           <select class="form-control" name="categoryId">
-            <option value="">카테고리</option>
+            <option value="" th:text="#{thymeleaf.write.form.category.category}">카테고리</option>
             <th:block th:each="categoryDTO : ${categoryList}">
               <option th:value="${categoryDTO.categoryId}"
                       th:text="${categoryDTO.name}"></option>
@@ -27,35 +27,35 @@
         </td>
       </tr>
       <tr>
-        <td class="bg-light">작성자 *</td>
+        <td class="bg-light" th:text="#{thymeleaf.write.form.writer}">작성자 *</td>
         <td><input type="text" class="form-control" name="writer"/></td>
       </tr>
 
       <tr>
-        <td class="bg-light">비밀번호 *</td>
+        <td class="bg-light" th:text="#{thymeleaf.write.form.password}">비밀번호 *</td>
         <td>
-          <input type="password" class="form-control" name="password" placeholder="비밀번호"/>
+          <input type="password" class="form-control" name="password" th:placeholder="#{thymeleaf.write.form.password.placeholder}"/>
           <input type="password" class="form-control" name="passwordCheck"
-                 placeholder="비밀번호 확인">
+                 th:placeholder="#{thymeleaf.write.form.password.confirm.placeholder}">
         </td>
       </tr>
       <tr>
-        <td class="bg-light">제목 *</td>
+        <td class="bg-light" th:text="#{thymeleaf.write.form.title}">제목 *</td>
         <td><input type="text" class="form-control" name="title"/></td>
       </tr>
       <tr>
-        <td class="bg-light">내용 *</td>
+        <td class="bg-light" th:text="#{thymeleaf.write.form.content}">내용 *</td>
         <td><textarea class="form-control" name="content"></textarea></td>
       </tr>
       <tr>
-        <td class="bg-light">파일첨부</td>
+        <td class="bg-light" th:text="#{thymeleaf.write.form.file}">파일첨부</td>
         <td>
           <div class="input-group">
             <div class="custom-file">
               <input type="file" class="custom-file-input" id="customFileInput1"
                      name="file1">
               <label class="custom-file-label" for="customFileInput1"
-                     aria-describedby="inputGroupFile1">파일 찾기</label>
+                     aria-describedby="inputGroupFile1" th:text="#{thymeleaf.write.form.file.search}">파일 찾기</label>
             </div>
           </div>
 
@@ -64,7 +64,7 @@
               <input type="file" class="custom-file-input" id="customFileInput2"
                      name="file2">
               <label class="custom-file-label" for="customFileInput2"
-                     aria-describedby="inputGroupFile2">파일 찾기</label>
+                     aria-describedby="inputGroupFile2" th:text="#{thymeleaf.write.form.file.search}">파일 찾기</label>
             </div>
           </div>
 
@@ -73,7 +73,7 @@
               <input type="file" class="custom-file-input" id="customFileInput3"
                      name="file3">
               <label class="custom-file-label" for="customFileInput3"
-                     aria-describedby="inputGroupFile3">파일 찾기</label>
+                     aria-describedby="inputGroupFile3" th:text="#{thymeleaf.write.form.file.search}">파일 찾기</label>
             </div>
           </div>
         </td>
@@ -82,11 +82,13 @@
     </table>
     <div>
       <button type="button" class="btn border float-left"
-              onclick="movePage('list.do?')">취소
+              onclick="movePage('list.do?')"
+              th:text="#{thymeleaf.write.form.cancel}">취소
       </button>
     </div>
     <div>
-      <button type="button" class="btn btn-primary float-right" onclick="validateForm()">저장</button>
+      <button type="button" class="btn btn-primary float-right" onclick="validateForm()"
+      th:text="#{thymeleaf.write.form.submit}">저장</button>
     </div>
   </form>
 </div>
@@ -115,34 +117,34 @@
   function validateForm() {
     let form = $("#articleForm")[0];
     if (form.categoryId.value == "") {
-      alert("카테고리를 선택해주세요.");
+      alert("[[#{thymeleaf.write.form.category.validation}]]");
       form.categoryId.focus();
       return false;
     }
     if (form.writer.value == "" || !/^.{3,4}$/g.test(form.writer.value)) {
-      alert("작성자를 3글자 이상, 5글자 미만으로 입력해주세요.");
+      alert("[[#{thymeleaf.write.form.writer.validation}]]");
       form.writer.focus();
       return false;
     }
     if (form.password.value == ""
         || !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{4,15}$/.test(
             form.password.value)) {
-      alert("비밀번호를 영문, 숫자, 특수문자를 포함해 4글자 이상, 16글자 미만으로 입력해주세요.");
+      alert("[[#{thymeleaf.write.form.password.validation}]]");
       form.password.focus();
       return false;
     }
     if (form.password.value != form.passwordCheck.value) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert("[[#{thymeleaf.write.form.password.confirm.validation}]]");
       form.password.focus();
       return false;
     }
     if (form.title.value == "" || !/^.{4,99}$/g.test(form.title.value)) {
-      alert("제목을 4글자 이상, 100글자 미만으로 입력해주세요.");
+      alert("[[#{thymeleaf.write.form.title.validation}]]");
       form.title.focus();
       return false;
     }
     if (form.content.value == "" || !/^.{4,1999}$/g.test(form.content.value)) {
-      alert("내용을 4글자 이상, 2000글자 미만으로 입력해주세요.");
+      alert("[[#{thymeleaf.write.form.content.validation}]]");
       form.content.focus();
       return false;
     }

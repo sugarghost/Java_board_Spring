@@ -2,20 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <th:block th:replace="common/header :: headerFragment"/>
-  <title>자유게시판 - 목록</title>
+  <title th:text="#{thymeleaf.view.title}">자유게시판 - 상세</title>
   <th:block th:replace="common/bootstrap :: bootstrapFragment"/>
 </head>
 <body>
 <div class="container">
-  <h1>자유게시판 - 보기</h1>
+  <h1 th:text="#{thymeleaf.view.title}">자유게시판 - 상세</h1>
   <div class="row d-flex">
     <div class="m-2 mr-auto" th:text="${articleDTO.writer}"></div>
     <div class="m-2">
-      등록일시
+      [[#{thymeleaf.view.content.createdDate}]]
       <span th:text="${#dates.format(articleDTO.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
     </div>
     <div class="m-2">
-      수정일시
+      [[#{thymeleaf.view.content.modefiedDate}]]
       <span
           th:text="${articleDTO.isModifiedDateValid()} ?
           ${#dates.format(articleDTO.modifiedDate, 'yyyy-MM-dd HH:mm')} :
@@ -25,7 +25,7 @@
   <div class="row">
     <div class="m-2" th:text="|[${articleDTO.categoryName}]|"></div>
     <div class="m-2 mr-auto text-break">[[${articleDTO.title}]]</div>
-    <div class="m-2">조회수: [[${articleDTO.viewCount}]]</div>
+    <div class="m-2">[[#{thymeleaf.view.content.viewCount}]]: [[${articleDTO.viewCount}]]</div>
   </div>
   <hr>
   <div class="row my-3">
@@ -62,12 +62,13 @@
           <div class="col-10">
             <input type="hidden" name="articleId" th:value="${articleDTO.articleId}">
             <textarea id="commentContent" class="form-control w-100 h-100 m-auto" name="content"
-                      placeholder="댓글을 입력해 주세요."></textarea>
+                      th:placeholder="#{thymeleaf.view.comment.placeholder}"></textarea>
 
           </div>
           <div class="col-2">
             <button type="button" class="btn btn-primary w-100 h-100 m-auto"
-                    onclick="validateCommentForm()">
+                    onclick="validateCommentForm()"
+            th:text="#{thymeleaf.view.comment.submit}">
               등록
             </button>
           </div>
@@ -78,14 +79,17 @@
   <div class="row">
     <div class="w-100 d-flex justify-content-center">
       <button type="button" class="btn btn-primary"
-              th:onclick="movePage('list.do?')">목록
+              th:onclick="movePage('list.do?')"
+              th:text="#{thymeleaf.view.form.list}">목록
       </button>
       <button type="button" class="btn border"
-              th:onclick="|movePage('modify.do?articleId=${articleDTO.articleId}')|">
+              th:onclick="|movePage('modify.do?articleId=${articleDTO.articleId}')|"
+              th:text="#{thymeleaf.view.form.modify}">
         수정
       </button>
       <button type="button" class="btn border" data-toggle="modal"
-              data-target="#passwordCheckModal">삭제
+              data-target="#passwordCheckModal"
+              th:text="#{thymeleaf.view.form.delete}">삭제
       </button>
     </div>
   </div>
@@ -99,24 +103,28 @@
             class="w-100">
         <input type="hidden" name="articleId" th:value="${articleDTO.articleId}">
         <div class="modal-header">
-          <h5 class="modal-title" id="passwordCheckModalTitle">비밀번호 확인</h5>
+          <h5 class="modal-title" id="passwordCheckModalTitle"
+          th:text="#{thymeleaf.view.delete.title}">비밀번호 확인</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <div class="col-2">
+          <div class="col-2" th:text="#{thymeleaf.view.delete.password}">
             비밀번호 *
           </div>
           <div class="col-10">
             <input type="password" class="form-control" name="password"
-                   placeholder="비밀번호를 입력해 주세요.">
+                   th:placeholder="#{thymeleaf.view.delete.password.placeholder}">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          th:text="#{thymeleaf.view.delete.cancel}">Close
           </button>
-          <button type="button" class="btn btn-primary" onclick="articleDeleteAjax()">확인</button>
+          <button type="button" class="btn btn-primary" onclick="articleDeleteAjax()"
+          th:text="#{thymeleaf.view.delete.submit}">확인
+          </button>
         </div>
       </form>
     </div>
@@ -204,7 +212,7 @@
     let form = $("#commentForm")[0];
 
     if (form.content.value == "" || !/^.{1,255}$/g.test(form.content.value)) {
-      alert("댓글을 1글자 이상, 255글자 미만으로 입력해주세요.");
+      alert("[[#{thymeleaf.view.comment.validation}]]");
       form.content.focus();
       return false;
     }
