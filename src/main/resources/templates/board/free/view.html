@@ -161,11 +161,11 @@
       data: formData,
       processData: false,
       contentType: false,
-      success: function (data) {
+      success: function () {
         movePage('list.do?');
       },
-      error: function (xhr, status, error) {
-        alert(xhr.responseText);
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseText);
       }
     });
   }
@@ -194,8 +194,8 @@
           commentList.append(comment);
         }
       },
-      error: function (xhr, status, error) {
-        alert(xhr.responseText);
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseText);
       }
     });
   }

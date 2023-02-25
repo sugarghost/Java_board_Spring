@@ -4,33 +4,62 @@ import java.sql.Date;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
-
+/**
+ * 게시글 DTO 클래스
+ *
+ * @author yoony
+ * @version 1.0
+ * @see ArticleMapper
+ * @since 2023. 02. 26.
+ */
 @Data
 @Alias("ArticleDTO")
 public class ArticleDTO {
 
-  // 게시글 ID(auto increment)
+  /**
+   * 게시글 ID(auto increment)
+   */
   private long articleId;
-  // 카테고리 ID(foreign key: category table)
+  /**
+   * 카테고리 ID(foreign key: category table)
+   */
   private long categoryId;
-  // 카테고리 이름(DB상에 컬럼은 존재하지 않고 DTO에만 존재)
+  /**
+   * 카테고리 이름(DB상에 컬럼은 존재하지 않고 DTO에만 존재)
+   */
   private String categoryName;
-  // 작성자(3~4자)
+  /**
+   * 작성자(3~4자)
+   */
   private String writer;
-  // 비밀번호(4~15자, 영문, 숫자, 특수문자 조합)
+  /**
+   * 비밀번호(4~15자, 영문, 숫자, 특수문자 조합)
+   */
   private String password;
-  // 제목(4~99자)
+  /**
+   * 제목(4~99자)
+   */
   private String title;
-  // 내용(4~1999자)
+  /**
+   * 내용(4~1999자)
+   */
   private String content;
-  // 조회수
+  /**
+   * 조회수
+   */
   private int viewCount;
-  // 파일 존재 여부(DB상에 컬럼은 존재하지 않고 DTO에만 존재)
-  // boolean으로 잡으니깐 JSP에서 인식을 못함
+  /**
+   * 파일 존재 여부(DB상에 컬럼은 존재하지 않고 DTO에만 존재)
+   * boolean으로 잡으니깐 JSP에서 인식을 못함
+   */
   private Boolean isFileExist;
-  // 작성일(current_timestamp())
+  /**
+   * 작성일(current_timestamp())
+   */
   private Date createdDate;
-  // 수정일
+  /**
+   * 수정일
+   */
   private Date modifiedDate;
 
   /**
@@ -120,6 +149,9 @@ public class ArticleDTO {
         && isContentValid();
   }
 
+  /**
+   * 파일 존재 여부를 반환
+   */
   public boolean isFileExist() {
     return isFileExist;
   }

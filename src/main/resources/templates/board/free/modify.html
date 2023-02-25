@@ -134,8 +134,8 @@
       success: function(data){
         location.href = "view.do?articleId=[[${articleDTO.articleId}]][(${searchManager.getSearchParamsQuery()})]";
       },
-      error: function(xhr, status, error){
-        alert(xhr.responseText);
+      error: function(jqXHR, textStatus, errorThrown){
+        alert(jqXHR.responseText);
       }
     });
   }

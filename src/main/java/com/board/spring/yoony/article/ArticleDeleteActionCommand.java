@@ -4,6 +4,7 @@ import com.board.spring.yoony.command.ActionCommand;
 import com.board.spring.yoony.command.DependencyCommand;
 import com.board.spring.yoony.error.CustomException;
 import com.board.spring.yoony.error.ErrorCode;
+import com.board.spring.yoony.file.FileDTO;
 import com.board.spring.yoony.file.FileMapper;
 import com.board.spring.yoony.util.RequestUtil;
 import com.board.spring.yoony.util.Security;
@@ -16,6 +17,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+/**
+ * 게시글 삭제 처리를 처리하는 커맨드
+ *
+ * @author yoony
+ * @version 1.0
+ * @see ActionCommand
+ * @see DependencyCommand
+ * @since 2023. 02. 26.
+ */
 @Service
 @RequiredArgsConstructor
 public class ArticleDeleteActionCommand implements ActionCommand {
@@ -24,6 +34,22 @@ public class ArticleDeleteActionCommand implements ActionCommand {
 
   private final DependencyCommand dependencyCommand;
 
+  /**
+   * 게시글 삭제 처리를 수행한다.
+   *
+   * @param request  HttpServletRequest
+   * @param paramMap Map<String, Object> 처리에 필요한 파라미터를 담은 맵
+   * @param model    Map<String, Object> 처리 결과를 담을 맵
+   * @throws Exception
+   * @throws CustomException
+   * @version 1.0
+   * @see ActionCommand#execute(HttpServletRequest, Map, Map)
+   * @see ArticleMapper#selectArticle(long) 게시글 조회
+   * @see ArticleMapper#selectPasswordCheck(ArticleDTO) 비밀번호 체크
+   * @see ArticleMapper#deleteArticle(ArticleDTO) 게시글 삭제
+   * @see FileMapper#deleteFile(FileDTO) 첨부파일 삭제
+   * @since 2023. 02. 26.
+   */
   @Override
   public void execute(HttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> model) throws Exception {

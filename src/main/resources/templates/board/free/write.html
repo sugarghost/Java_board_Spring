@@ -106,8 +106,8 @@
       success: function(data){
         location.href = "list.do?";
       },
-      error: function(xhr, status, error){
-        alert(xhr.responseText);
+      error: function(jqXHR, textStatus, errorThrown){
+        alert(jqXHR.responseJSON.message);
       }
     });
   }
