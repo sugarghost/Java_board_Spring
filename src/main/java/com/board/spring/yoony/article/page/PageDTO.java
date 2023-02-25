@@ -50,6 +50,7 @@ public class PageDTO {
 
   /**
    * 기본 생성자
+   *
    * @author yoony
    * @version 1.0
    * @since 2023. 02. 26.

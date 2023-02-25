@@ -29,6 +29,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+/**
+ * 파일 다운로드를 위한 커맨드
+ *
+ * @author yoony
+ * @version 1.0
+ * @see ActionCommand
+ * @see DependencyCommand
+ * @since 2023. 02. 26.
+ */
 @Service
 @RequiredArgsConstructor
 public class FileDownloadActionCommand implements DownloadCommand {
@@ -38,6 +47,18 @@ public class FileDownloadActionCommand implements DownloadCommand {
 
   private final DependencyCommand dependencyCommand;
 
+  /**
+   * 파일 다운로드를 수행한다.
+   * <p>파라미터로 articleId, fileId를 받아와서 해당 파일을 다운로드
+   *
+   * @param request HttpServletRequest
+   * @throws Exception
+   * @throws CustomException
+   * @author yoony
+   * @version 1.0
+   * @see ActionCommand#execute(HttpServletRequest, Map, Map)
+   * @see FileMapper#selectFile(FileDTO) 파일 조회
+   */
   @Override
   public ResponseEntity execute(HttpServletRequest request) throws Exception {
     logger.debug("execute()");

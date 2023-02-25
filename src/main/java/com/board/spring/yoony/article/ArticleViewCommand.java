@@ -18,6 +18,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * 게시글 상세보기 페이지를 처리하는 커맨드
+ *
+ * @author yoony
+ * @version 1.0
+ * @see MainCommand
+ * @see DependencyCommand
+ * @since 2023. 02. 26.
+ */
 @Service
 @RequiredArgsConstructor
 public class ArticleViewCommand implements MainCommand {
@@ -26,6 +35,26 @@ public class ArticleViewCommand implements MainCommand {
 
   private final DependencyCommand dependencyCommand;
 
+  /**
+   * 게시글 상세보기 페이지를 처리한다.
+   * <p>articleId를 매개변수로 받아 게시글 정보를 가져온다.
+   * <p>게시글에 등록된 파일 정보가 있다면 파일 리스트를 가져온다.
+   * <p>게시글에 등록된 댓글 정보가 있다면 댓글 리스트를 가져온다.
+   * <p>board/free/view 페이지로 이동한다.
+   *
+   * @param request   HttpServletRequest
+   * @param paramMap  Map<String, Object> 처리에 필요한 파라미터를 담은 맵
+   * @param viewModel Map<String, Object> 처리 결과를 담을 맵
+   * @return String 뷰 페이지
+   * @throws Exception
+   * @throws CustomException
+   * @see MainCommand#execute(HttpServletRequest, Map, Map)
+   * @see ArticleMapper#selectArticle(long) 게시글 조회
+   * @see ArticleMapper#updateArticleViewCount(long) 조회수 증가
+   * @see FileMapper#selectFileList(long) 첨부파일 목록 조회
+   * @see CommentMapper#selectCommentList(long) 댓글 목록 조회
+   * @since 2023. 02. 26.
+   */
   @Override
   public String execute(HttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> viewModel) {

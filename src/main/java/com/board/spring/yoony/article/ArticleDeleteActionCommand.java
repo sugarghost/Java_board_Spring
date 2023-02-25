@@ -42,6 +42,7 @@ public class ArticleDeleteActionCommand implements ActionCommand {
    * @param model    Map<String, Object> 처리 결과를 담을 맵
    * @throws Exception
    * @throws CustomException
+   * @author yoony
    * @version 1.0
    * @see ActionCommand#execute(HttpServletRequest, Map, Map)
    * @see ArticleMapper#selectArticle(long) 게시글 조회

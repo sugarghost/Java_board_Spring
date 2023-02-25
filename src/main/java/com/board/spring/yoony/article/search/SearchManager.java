@@ -47,11 +47,11 @@ public class SearchManager {
    * 검색 조건을 관리하기 위한 생성자
    * <p>검색 조건 String을 가져와 필드에 저장함
    *
-   * @param pageNum 현재 페이지 번호
+   * @param pageNum    현재 페이지 번호
    * @param searchWord 검색어(제목, 내용, 작성자)
    * @param categoryId 카테고리 아이디
-   * @param startDate 검색 시작 날짜
-   * @param endDate 검색 종료 날짜
+   * @param startDate  검색 시작 날짜
+   * @param endDate    검색 종료 날짜
    * @author yoony
    * @version 1.0
    * @since 2023. 02. 26.

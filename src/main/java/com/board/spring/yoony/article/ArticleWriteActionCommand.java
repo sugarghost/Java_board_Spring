@@ -21,6 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+/**
+ * 게시글 등록 처리를 위한 커맨드
+ *
+ * @author yoony
+ * @version 1.0
+ * @see ActionCommand
+ * @see DependencyCommand
+ * @since 2023. 02. 26.
+ */
 @Service
 @RequiredArgsConstructor
 public class ArticleWriteActionCommand implements ActionCommand {
@@ -29,6 +38,24 @@ public class ArticleWriteActionCommand implements ActionCommand {
 
   private final DependencyCommand dependencyCommand;
 
+  /**
+   * 게시글 등록 처리를 수행한다.
+   * <p>게시글 등록을 위해 title, content, writer, categoryId, password를 매개변수로 받아옴
+   * <p>password를 sha256으로 암호화하고 게시글을 등록
+   * <p>파일이 첨부되었다면 파일을 저장하고 파일 정보를 DB에 저장
+   *
+   * @param request  HttpServletRequest
+   * @param paramMap Map<String, Object> 처리에 필요한 파라미터를 담은 맵
+   * @param model    Map<String, Object> 처리 결과를 담을 맵
+   * @throws Exception
+   * @throws CustomException
+   * @author yoony
+   * @version 1.0
+   * @see ActionCommand#execute(HttpServletRequest, Map, Map)
+   * @see ArticleMapper#insertArticle(ArticleDTO) 게시글 등록
+   * @see FileMapper#insertFile(FileDTO) 파일 등록
+   * @since 2023. 02. 26.
+   */
   @Transactional
   @Override
   public void execute(HttpServletRequest request, Map<String, Object> paramMap,

@@ -38,6 +38,7 @@ public class ArticleListCommand implements MainCommand {
    * 통해 게시글 목록을 가져온다.
    * <p>게시글 목록을 가져올 때는 검색을 위한 param을 넘겨준다.
    * <p>검색 조건은 searchWord, category, startDate, endDate, pageNum(현재 페이지) 이다.
+   * <p>board/free/list 페이지로 이동
    *
    * @param request   HttpServletRequest
    * @param paramMap  Map<String, Object> 처리에 필요한 파라미터를 담은 맵

@@ -25,6 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+/**
+ * 게시글 수정 처리를 위한 커맨드
+ *
+ * @author yoony
+ * @version 1.0
+ * @see ActionCommand
+ * @see DependencyCommand
+ * @since 2023. 02. 26.
+ */
 @Service
 @RequiredArgsConstructor
 public class ArticleModifyActionCommand implements ActionCommand {
@@ -32,6 +41,29 @@ public class ArticleModifyActionCommand implements ActionCommand {
   private Logger logger = LogManager.getLogger(ArticleWriteActionCommand.class);
 
   private final DependencyCommand dependencyCommand;
+
+  /**
+   * 게시글 수정 처리를 수행한다.
+   * <p>게시글 수정을 위해 articleId, title, content, writer, password를 매개변수로 받아옴
+   * <p>password를 sha256으로 암호화하고 게시글의 비밀번호와 일치하는지 확인
+   * <p>일치하면 게시글을 수정하고 해당 게시글에 속한 파일들을 수정
+   * <p>파일이 등록되면 파일을 저장하고 파일 정보를 DB에 저장
+   * <p>삭제 대상 파일 id를 deleteFileId으로 받아와서 해당 파일을 삭제
+   *
+   * @param request  HttpServletRequest
+   * @param paramMap Map<String, Object> 처리에 필요한 파라미터를 담은 맵
+   * @param model    Map<String, Object> 처리 결과를 담을 맵
+   * @throws Exception
+   * @throws CustomException
+   * @author yoony
+   * @version 1.0
+   * @see ActionCommand#execute(HttpServletRequest, Map, Map)
+   * @see ArticleMapper#selectPasswordCheck(ArticleDTO) 비밀번호 체크
+   * @see ArticleMapper#updateArticle(ArticleDTO) 게시글 수정
+   * @see FileMapper#deleteFile(FileDTO) 파일 삭제
+   * @see FileMapper#insertFile(FileDTO) 파일 등록
+   * @since 2023. 02. 26.
+   */
   @Transactional
   @Override
   public void execute(HttpServletRequest request, Map<String, Object> paramMap,
