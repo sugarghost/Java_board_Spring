@@ -46,7 +46,7 @@ public class ArticleWriteActionCommand implements ActionCommand {
     logger.debug("articleDTO : " + articleDTO.toString());
     if (!articleDTO.isInsertArticleValid()) {
       logger.debug("isInsertArticleValid() : invalid data");
-      throw new CustomException("유효하지 않은 insert 정보입니다.", ErrorCode.ARTICLE_INSERT_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_INSERT_NOT_VALID);
     }
 
     articleDTO.setPassword(Security.sha256Encrypt(multipartRequest.getParameter("password")));
@@ -60,7 +60,7 @@ public class ArticleWriteActionCommand implements ActionCommand {
     logger.debug("articleId : " + articleId);
     // 게시글 등록 성공 여부를 확인함
     if (articleInsertResult < 1) {
-      throw new CustomException("게시글 등록에 실패하였습니다.", ErrorCode.ARTICLE_INSERT_FAIL);
+      throw new CustomException(ErrorCode.ARTICLE_INSERT_FAIL);
     }
 
     String contentType = multipartRequest.getContentType();
@@ -92,7 +92,7 @@ public class ArticleWriteActionCommand implements ActionCommand {
         int insertResult = fileMapper.insertFile(fileDTO);
 
         if (insertResult < 1) {
-          throw new CustomException("파일 등록에 실패하였습니다.", ErrorCode.FILE_INSERT_FAIL);
+          throw new CustomException(ErrorCode.FILE_INSERT_FAIL);
         }
       }
     }

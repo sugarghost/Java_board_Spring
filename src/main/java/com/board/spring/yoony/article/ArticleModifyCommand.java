@@ -4,6 +4,7 @@ import com.board.spring.yoony.command.DependencyCommand;
 import com.board.spring.yoony.command.MainCommand;
 import com.board.spring.yoony.comment.CommentMapper;
 import com.board.spring.yoony.error.CustomException;
+import com.board.spring.yoony.error.CustomExceptionView;
 import com.board.spring.yoony.error.ErrorCode;
 import com.board.spring.yoony.file.FileDTO;
 import com.board.spring.yoony.file.FileMapper;
@@ -41,7 +42,7 @@ public class ArticleModifyCommand implements MainCommand {
 
     ArticleDTO articleDTO = articleMapper.selectArticle(articleId);
     if (articleDTO == null) {
-      throw new CustomException("해당 게시물이 존재하지 않습니다.", ErrorCode.ARTICLE_NOT_FOUND);
+      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
     }
     request.setAttribute("articleDTO", articleDTO);
     if (articleDTO.isFileExist()) {

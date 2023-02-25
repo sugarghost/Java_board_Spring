@@ -50,7 +50,7 @@ public class ArticleModifyActionCommand implements ActionCommand {
     articleDTO.setPassword(multipartRequest.getParameter("password"));
 
     if (!articleDTO.isUpdateArticleValid()) {
-      throw new CustomException("유효하지 않은 update 정보입니다.", ErrorCode.ARTICLE_UPDATE_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_UPDATE_NOT_VALID);
     }
     articleDTO.setPassword(Security.sha256Encrypt(articleDTO.getPassword()));
 
@@ -61,13 +61,13 @@ public class ArticleModifyActionCommand implements ActionCommand {
 
     // 패스워드가 일치하지 않으면 에러
     if (!isPasswordValid) {
-      throw new CustomException("패스워드가 일치하지 않습니다.", ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
+      throw new CustomException(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
     }
     // 검사를 통과했으면 수정을 진행
 
     int articleUpdateResult = articleMapper.updateArticle(articleDTO);
     if (articleUpdateResult < 1) {
-      throw new CustomException("게시글 수정에 실패했습니다.", ErrorCode.ARTICLE_UPDATE_FAIL);
+      throw new CustomException(ErrorCode.ARTICLE_UPDATE_FAIL);
     }
     // 파일 삭제 대상의 ID들을 받아옴
     String[] deleteFileIds = multipartRequest.getParameterValues("deleteFileId");
@@ -110,7 +110,7 @@ public class ArticleModifyActionCommand implements ActionCommand {
       int insertResult = fileMapper.insertFile(fileDTO);
 
       if (insertResult < 1) {
-        throw new CustomException("파일 등록에 실패하였습니다.", ErrorCode.FILE_INSERT_FAIL);
+        throw new CustomException(ErrorCode.FILE_INSERT_FAIL);
       }
     }
     dependencyCommand.getSqlSessionTemplate().commit();

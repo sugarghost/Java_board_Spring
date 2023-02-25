@@ -34,9 +34,11 @@ public class GlobalExceptionHandler {
     log.error("handleCustomExceptionView", ex);
 
     ModelAndView modelAndView = new ModelAndView();
-    ex.getErrorCode().getErrorCode();
 
-    modelAndView.addObject("exception", ex);
+    Locale currentLocale = LocaleContextHolder.getLocale();
+    String errorMessage = messageSource.getMessage(ex.getErrorCode().getErrorCode(), null, currentLocale);
+    modelAndView.addObject("errorMessage", errorMessage);
+    modelAndView.addObject("errorCode", ex.getErrorCode().getStatus());
     modelAndView.setViewName("error/error");
     return modelAndView;
   }
@@ -53,8 +55,7 @@ public class GlobalExceptionHandler {
   public ModelAndView handleException(Exception ex) {
     log.error("handleException", ex);
     ModelAndView modelAndView = new ModelAndView();
-
-    modelAndView.addObject("exception", ex);
+    modelAndView.addObject("errorMessage", ex.getMessage());
     modelAndView.setViewName("error/error");
     return modelAndView;
   }

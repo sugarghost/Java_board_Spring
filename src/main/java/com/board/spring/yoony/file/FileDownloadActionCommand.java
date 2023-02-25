@@ -54,7 +54,7 @@ public class FileDownloadActionCommand implements DownloadCommand {
     FileDTO fileDTO = fileMapper.selectFile(fileDTOParam);
 
     if (fileDTO == null) {
-      throw new CustomException("파일 정보가 존재하지 않습니다.", ErrorCode.FILE_NOT_FOUND);
+      throw new CustomException(ErrorCode.FILE_NOT_FOUND);
     }
     Resource resource = new FileSystemResource(fileDTO.getFilePath() + File.separator
         + fileDTO.getFileSaveName());

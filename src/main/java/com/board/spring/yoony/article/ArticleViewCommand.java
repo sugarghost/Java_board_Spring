@@ -5,6 +5,7 @@ import com.board.spring.yoony.command.MainCommand;
 import com.board.spring.yoony.comment.CommentDTO;
 import com.board.spring.yoony.comment.CommentMapper;
 import com.board.spring.yoony.error.CustomException;
+import com.board.spring.yoony.error.CustomExceptionView;
 import com.board.spring.yoony.error.ErrorCode;
 import com.board.spring.yoony.file.FileDTO;
 import com.board.spring.yoony.file.FileMapper;
@@ -39,12 +40,12 @@ public class ArticleViewCommand implements MainCommand {
     long articleId = RequestUtil.getLongParameter(request.getParameter("articleId"));
 
     if (articleId == 0) {
-      throw new CustomException("게시물 ID가 유효하지 않습니다.", ErrorCode.ARTICLE_ID_NOT_VALID);
+      throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
 
     ArticleDTO articleDTO = articleMapper.selectArticle(articleId);
     if (articleDTO == null) {
-      throw new CustomException("해당 게시물이 존재하지 않습니다.", ErrorCode.ARTICLE_NOT_FOUND);
+      throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
     }
 
     // 조회수 증가
