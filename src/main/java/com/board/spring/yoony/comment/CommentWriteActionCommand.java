@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -56,16 +57,13 @@ public class CommentWriteActionCommand implements ActionCommand {
       Map<String, Object> model) throws Exception {
     logger.debug("execute()");
 
-    // MyBatis Mapper 가져옴
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
-    CommentMapper commentMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(CommentMapper.class);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
 
     long articleId = RequestUtil.getLongParameter(request.getParameter("articleId"));
     String content = request.getParameter("content");
 
     // articleId 유효성 검사
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
     if (articleMapper.selectArticleCheck(articleId)) {
       new CustomException(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
@@ -80,6 +78,7 @@ public class CommentWriteActionCommand implements ActionCommand {
       new CustomException(ErrorCode.COMMENT_CONTENT_NOT_VALID);
     }
 
+    CommentMapper commentMapper = sqlSessionTemplate.getMapper(CommentMapper.class);
     int commentInsertResult = commentMapper.insertComment(commentDTO);
 
     // 댓글 작성 성공 여부 확인

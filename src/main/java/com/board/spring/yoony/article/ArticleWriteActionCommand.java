@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,7 +63,7 @@ public class ArticleWriteActionCommand implements ActionCommand {
       Map<String, Object> model) throws Exception {
     logger.debug("execute()");
     MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-    // MyBatis instance 가져옴
+
     ArticleDTO articleDTO = new ArticleDTO();
     articleDTO.setTitle(multipartRequest.getParameter("title"));
     articleDTO.setContent(multipartRequest.getParameter("content"));
@@ -70,7 +71,8 @@ public class ArticleWriteActionCommand implements ActionCommand {
     articleDTO.setCategoryId(
         RequestUtil.getIntParameter(multipartRequest.getParameter("categoryId")));
     articleDTO.setPassword(multipartRequest.getParameter("password"));
-    logger.debug("articleDTO : " + articleDTO.toString());
+
+    // insert 유효성 검사
     if (!articleDTO.isInsertArticleValid()) {
       logger.debug("isInsertArticleValid() : invalid data");
       throw new CustomException(ErrorCode.ARTICLE_INSERT_NOT_VALID);
@@ -79,8 +81,9 @@ public class ArticleWriteActionCommand implements ActionCommand {
     articleDTO.setPassword(Security.sha256Encrypt(multipartRequest.getParameter("password")));
 
     // MyBatis Mapper 가져옴
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
+
     // 게시글을 등록함
     int articleInsertResult = articleMapper.insertArticle(articleDTO);
     long articleId = articleDTO.getArticleId();
@@ -93,8 +96,8 @@ public class ArticleWriteActionCommand implements ActionCommand {
     String contentType = multipartRequest.getContentType();
     if (contentType != null && contentType.toLowerCase().startsWith("multipart/")) {
 
-      FileMapper fileMapper = dependencyCommand.getSqlSessionTemplate()
-          .getMapper(FileMapper.class);
+      // 파일을 저장하고 파일 정보를 DB에 저장함
+      FileMapper fileMapper = sqlSessionTemplate.getMapper(FileMapper.class);
       java.util.Iterator<String> fileNames = multipartRequest.getFileNames();
       while (fileNames.hasNext()) {
         String targetFileName = fileNames.next();
@@ -123,6 +126,6 @@ public class ArticleWriteActionCommand implements ActionCommand {
         }
       }
     }
-    dependencyCommand.getSqlSessionTemplate().commit();
+    sqlSessionTemplate.commit();
   }
 }

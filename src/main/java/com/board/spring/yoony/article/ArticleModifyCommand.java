@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -61,18 +62,21 @@ public class ArticleModifyCommand implements MainCommand {
     logger.debug("execute()");
     String viewPage = "board/free/modify";
 
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
 
     long articleId = RequestUtil.getLongParameter(request.getParameter("articleId"));
 
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
+    // 게시글 조회
     ArticleDTO articleDTO = articleMapper.selectArticle(articleId);
     if (articleDTO == null) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
     }
     request.setAttribute("articleDTO", articleDTO);
+
+    // 첨부파일 목록 조회
     if (articleDTO.isFileExist()) {
-      FileMapper fileMapper = dependencyCommand.getSqlSessionTemplate().getMapper(FileMapper.class);
+      FileMapper fileMapper = sqlSessionTemplate.getMapper(FileMapper.class);
       List<FileDTO> fileList = fileMapper.selectFileList(articleId);
       request.setAttribute("fileList", fileList);
     }

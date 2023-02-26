@@ -52,8 +52,8 @@ public class ArticleWriteCommand implements MainCommand {
     logger.debug("execute()");
     String viewPage = "board/free/write";
     // MyBatis mapper 가져옴
-    CategoryMapper categoryMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(CategoryMapper.class);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
+    CategoryMapper categoryMapper = sqlSessionTemplate.getMapper(CategoryMapper.class);
 
     List<CategoryDTO> categoryList = categoryMapper.selectCategoryList();
     request.setAttribute("categoryList", categoryList);

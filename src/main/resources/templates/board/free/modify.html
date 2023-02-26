@@ -118,7 +118,7 @@
         link.click();
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        alert(jqXHR.responseText);
+        alert(jqXHR.responseJSON.message);
       }
     });
   }
@@ -135,7 +135,7 @@
         location.href = "view.do?articleId=[[${articleDTO.articleId}]][(${searchManager.getSearchParamsQuery()})]";
       },
       error: function(jqXHR, textStatus, errorThrown){
-        alert(jqXHR.responseText);
+        alert(jqXHR.responseJSON.message);
       }
     });
   }

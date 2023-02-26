@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,11 +88,11 @@ public class ArticleModifyActionCommand implements ActionCommand {
     articleDTO.setPassword(Security.sha256Encrypt(articleDTO.getPassword()));
 
     // MyBatis Mapper 가져옴
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
-    boolean isPasswordValid = articleMapper.selectPasswordCheck(articleDTO);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
 
     // 패스워드가 일치하지 않으면 에러
+    boolean isPasswordValid = articleMapper.selectPasswordCheck(articleDTO);
     if (!isPasswordValid) {
       throw new CustomException(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
     }
@@ -104,11 +105,8 @@ public class ArticleModifyActionCommand implements ActionCommand {
     // 파일 삭제 대상의 ID들을 받아옴
     String[] deleteFileIds = multipartRequest.getParameterValues("deleteFileId");
 
-    FileMapper fileMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(FileMapper.class);
-
     // 파일 삭제 대상이 있다면 삭제
-
+    FileMapper fileMapper = sqlSessionTemplate.getMapper(FileMapper.class);
     if (deleteFileIds != null) {
       for (String deleteFileId : deleteFileIds) {
         FileDTO deleteFileDTO = new FileDTO();
@@ -145,6 +143,6 @@ public class ArticleModifyActionCommand implements ActionCommand {
         throw new CustomException(ErrorCode.FILE_INSERT_FAIL);
       }
     }
-    dependencyCommand.getSqlSessionTemplate().commit();
+    sqlSessionTemplate.commit();
   }
 }

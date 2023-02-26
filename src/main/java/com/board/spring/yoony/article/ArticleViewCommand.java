@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,11 +61,9 @@ public class ArticleViewCommand implements MainCommand {
       Map<String, Object> viewModel) {
     logger.debug("execute()");
     String viewPage = "board/free/view";
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
-    FileMapper fileMapper = dependencyCommand.getSqlSessionTemplate().getMapper(FileMapper.class);
-    CommentMapper commentMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(CommentMapper.class);
+
+    // mapper 가져오기
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
 
     long articleId = RequestUtil.getLongParameter(request.getParameter("articleId"));
 
@@ -72,6 +71,7 @@ public class ArticleViewCommand implements MainCommand {
       throw new CustomExceptionView(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
 
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
     ArticleDTO articleDTO = articleMapper.selectArticle(articleId);
     if (articleDTO == null) {
       throw new CustomExceptionView(ErrorCode.ARTICLE_NOT_FOUND);
@@ -86,10 +86,12 @@ public class ArticleViewCommand implements MainCommand {
 
     // 게시글에 파일이 존재하면 파일 목록을 가져옴
     if (articleDTO.getIsFileExist()) {
+      FileMapper fileMapper = sqlSessionTemplate.getMapper(FileMapper.class);
       List<FileDTO> fileList = fileMapper.selectFileList(articleId);
       viewModel.put("fileList", fileList);
     }
 
+    CommentMapper commentMapper = sqlSessionTemplate.getMapper(CommentMapper.class);
     // 댓글 목록을 가져옴
     List<CommentDTO> commentList = commentMapper.selectCommentList(articleId);
     if (commentList != null) {

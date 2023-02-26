@@ -46,9 +46,9 @@ public class ArticleListCommand implements MainCommand {
    * @return String 뷰 페이지
    * @version 1.0
    * @see MainCommand#execute(HttpServletRequest, Map, Map)
-   * @see CategoryMapper#selectCategoryList() 카테고리 목록 조회
    * @see ArticleMapper#selectArticleCount(Map) 게시글 수 조회
    * @see ArticleMapper#selectArticleList(Map) 게시글 목록 조회
+   * @see CategoryMapper#selectCategoryList() 카테고리 목록 조회
    * @since 2023. 02. 26.
    */
   @Override
@@ -56,13 +56,9 @@ public class ArticleListCommand implements MainCommand {
       Map<String, Object> viewModel) {
     logger.debug("execute()");
     String viewPage = "board/free/list";
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
-    CategoryMapper categoryMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(CategoryMapper.class);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
 
-    List<CategoryDTO> categoryList = categoryMapper.selectCategoryList();
-    viewModel.put("categoryList", categoryList);
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
 
     // 페이지네이션 구현
     int totalCount = articleMapper.selectArticleCount(paramMap);
@@ -81,6 +77,11 @@ public class ArticleListCommand implements MainCommand {
     // 검색조건에 따른 게시글 가져옴
     List<ArticleDTO> articleList = articleMapper.selectArticleList(paramMap);
     viewModel.put("articleList", articleList);
+
+    // 카테고리 목록 가져옴
+    CategoryMapper categoryMapper = sqlSessionTemplate.getMapper(CategoryMapper.class);
+    List<CategoryDTO> categoryList = categoryMapper.selectCategoryList();
+    viewModel.put("categoryList", categoryList);
     return viewPage;
   }
 }

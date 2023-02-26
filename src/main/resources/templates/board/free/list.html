@@ -14,7 +14,8 @@
         등록일
       </div>
       <div class="col-2">
-        <input type="date" class="form-control" name="startDate" th:value="${searchManager.startDate}">
+        <input type="date" class="form-control" name="startDate"
+               th:value="${searchManager.startDate}">
       </div>
       <div class="col-1 align-self-center text-center">
         ~
@@ -86,11 +87,11 @@
             </td>
             <td>[[${articleDTO.viewCount}]]
             </td>
-            <td>[[${(articleDTO.isCreatedDateValid()) ? articleDTO.createdDate
-              : "-" }]]
+            <td th:text="${(articleDTO.isCreatedDateValid()) ? #dates.format(articleDTO.createdDate, 'yyyy-MM-dd HH:mm')
+              : '-' }">
             </td>
-            <td>[[${(articleDTO.isModifiedDateValid()) ? articleDTO.modifiedDate
-              : "-"}]]
+            <td th:text="${(articleDTO.isModifiedDateValid()) ? #dates.format(articleDTO.modifiedDate, 'yyyy-MM-dd HH:mm')
+            : '-' }">
             </td>
           </tr>
           </tbody>

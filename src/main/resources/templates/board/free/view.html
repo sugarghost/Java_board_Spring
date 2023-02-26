@@ -155,7 +155,7 @@
         link.click();
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        alert(jqXHR.responseText);
+        alert(jqXHR.responseJSON.message);
       }
     });
   }
@@ -173,7 +173,7 @@
         movePage('list.do?');
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        alert(jqXHR.responseText);
+        alert(jqXHR.responseJSON.message);
       }
     });
   }
@@ -192,9 +192,11 @@
         let commentList = $('#commentList');
         commentList.empty();
         for (i = 0; i < data.commentList.length; i++) {
+          const date = new Date(data.commentList[i].createdDate);
+          const formattedCreatedDate = date.toISOString().slice(0, 16).replace('T', ' ');
           var comment = "" +
               "<div class=\"row justify-content-start px-2 pt-2\">" +
-              data.commentList[i].createdDate +
+              formattedCreatedDate +
               "</div>" +
               "<div class=\"row border-bottom px-2 pb-3 text-break\">" +
               data.commentList[i].content +
@@ -203,7 +205,7 @@
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        alert(jqXHR.responseText);
+        alert(jqXHR.responseJSON.message);
       }
     });
   }

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -56,11 +57,12 @@ public class ArticleDeleteActionCommand implements ActionCommand {
       Map<String, Object> model) throws Exception {
     logger.debug("execute()");
 
-    ArticleMapper articleMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(ArticleMapper.class);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
+    ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);
     long articleId = RequestUtil.getLongParameter(request.getParameter("articleId"));
     String password = Security.sha256Encrypt(request.getParameter("password"));
 
+    // 게시글 검증
     if (articleId < 1) {
       throw new CustomException(ErrorCode.ARTICLE_ID_NOT_VALID);
     }
@@ -73,18 +75,20 @@ public class ArticleDeleteActionCommand implements ActionCommand {
     deleteArticleDTO.setArticleId(articleId);
     deleteArticleDTO.setPassword(password);
 
+    // 비밀번호 체크
     boolean isPasswordValid = articleMapper.selectPasswordCheck(deleteArticleDTO);
     if (!isPasswordValid) {
       throw new CustomException(ErrorCode.ARTICLE_PASSWORD_NOT_VALID);
     }
-    int result = articleMapper.deleteArticle(deleteArticleDTO);
 
+    // 게시글 삭제
+    int result = articleMapper.deleteArticle(deleteArticleDTO);
     if (result < 1) {
       throw new CustomException(ErrorCode.ARTICLE_DELETE_FAIL);
     }
-    FileMapper fileMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(FileMapper.class);
 
+    // 첨부파일 삭제
+    FileMapper fileMapper = sqlSessionTemplate.getMapper(FileMapper.class);
     fileMapper.deleteAllFile(articleId);
   }
 }

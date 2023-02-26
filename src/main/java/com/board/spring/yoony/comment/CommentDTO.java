@@ -1,8 +1,10 @@
 package com.board.spring.yoony.comment;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 댓글 DTO
@@ -31,7 +33,7 @@ public class CommentDTO {
   /**
    * 작성일(current_timestamp())
    */
-  private Date createdDate;
+  private Timestamp createdDate;
 
   /**
    * 댓글 내용이 유효한지 검사하는 메소드

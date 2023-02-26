@@ -1,8 +1,11 @@
 package com.board.spring.yoony.article;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Date;
+import java.sql.Timestamp;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 게시글 DTO 클래스
@@ -55,11 +58,11 @@ public class ArticleDTO {
   /**
    * 작성일(current_timestamp())
    */
-  private Date createdDate;
+  private Timestamp createdDate;
   /**
    * 수정일
    */
-  private Date modifiedDate;
+  private Timestamp modifiedDate;
 
   /**
    * 작성자가 유효한지 검사 null 체크, isEmpty 체크 정규식 검사: 3~4자

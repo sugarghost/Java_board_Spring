@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -66,8 +67,8 @@ public class FileDownloadActionCommand implements DownloadCommand {
     long articleId = RequestUtil.getLongParameter(request.getParameter("articleId"));
     long fileId = RequestUtil.getLongParameter(request.getParameter("fileId"));
 
-    FileMapper fileMapper = dependencyCommand.getSqlSessionTemplate()
-        .getMapper(FileMapper.class);
+    SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
+    FileMapper fileMapper = sqlSessionTemplate.getMapper(FileMapper.class);
 
     FileDTO fileDTOParam = new FileDTO();
     fileDTOParam.setArticleId(articleId);
