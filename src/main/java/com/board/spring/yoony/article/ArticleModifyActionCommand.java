@@ -87,6 +87,8 @@ public class ArticleModifyActionCommand implements ActionCommand {
     }
     articleDTO.setPassword(Security.sha256Encrypt(articleDTO.getPassword()));
 
+    // TODO: 리팩토링은 단순히 구조만 바꾸는게 아닌 소스코드 구성이나 기능별로 나눠서 코드를 가독성 높이는 것도 리팩토링
+    // Validation 도 중간중간 있는것은 가독성이 안좋고 차라리 Validation manager를 따로 만들어서 한번에 관리하는 것도 좋은 방법
     // MyBatis Mapper 가져옴
     SqlSessionTemplate sqlSessionTemplate = dependencyCommand.getSqlSessionTemplate();
     ArticleMapper articleMapper = sqlSessionTemplate.getMapper(ArticleMapper.class);

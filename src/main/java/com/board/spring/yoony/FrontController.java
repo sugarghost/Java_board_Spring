@@ -39,10 +39,17 @@ import org.springframework.web.servlet.ModelAndView;
  * @see DownloadCommand
  * @since 2023. 02. 26.
  */
+
+// TODO: 공통 처리용 하나만 남기고 리턴 타입은 ResponseEntity 하나로 처리 하는게 좋음
+  // Spring 라이프 사이클을 띄운다는건 컨트롤러로 받고 서비스에 처리 맡기고 하는 동안 우리가 트랜잭션해야활 것들은 Spring 내부 자체적으로 처리해줌
+  // Command 방식은 Spring 지원이 안됨
+  // Spring을 쓴다면 결국 개별의 Request Mapping이 Command가 됨
+  // Domain 기준으로(Comment, Article, File) 생각하고 각 Mapping은 하나의 Command 처리라 생각하면 됨
+
+// TODO: 문제가 생길까봐 빈 객체를 넘기는 등 예외를 회피하는 경우는 나중에 문제를 야기함
 @Controller
 @RequiredArgsConstructor
 public class FrontController {
-
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   /**
@@ -83,6 +90,7 @@ public class FrontController {
    * @see DownloadCommandHelper
    * @since 2023. 02. 26.
    */
+  // TODO: FILE은 재사용이 가능하니 도메인별 구분으로 빼지 말고 단일 처리롤 파일을 만들어서 호출해처리하거나 하기
   @RequestMapping("/{pathCommand}_download.do")
   public ResponseEntity handleAllDownload(HttpServletRequest request,
       @PathVariable("pathCommand") String pathCommand)
@@ -163,6 +171,7 @@ public class FrontController {
 
     MainCommand mainCommand = mainCommandHelper.getCommand(pathCommand);
     viewModel.put("searchManager", searchManager);
+    // FEEDBACK: 리퀘스트 던지는건 UTIL애기고 Command는 던져도 괜찮음
     String viewName = mainCommand.execute(request, paramMap, viewModel);
 
     ModelAndView modelAndView = new ModelAndView(viewName, viewModel);

@@ -15,7 +15,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ArticleMapper {
-
   /**
    * 게시글을 등록하는 메소드
    * <p>useGeneratedKeys="true"를 통해 insert 된 articleId가 매개변수 articleDTO에 자동으로 입력됨

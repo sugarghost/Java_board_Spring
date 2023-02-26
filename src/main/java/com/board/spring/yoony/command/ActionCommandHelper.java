@@ -45,6 +45,11 @@ public class ActionCommandHelper {
    * @see ArticleDeleteActionCommand 게시글 삭제 요청 처리를 위한 ActionCommand
    * @since 2023. 02. 26.
    */
+  // TODO: commans라고 하니 LIST 느낌이라고 생각함 이름을 그냥 Map으로 변경하는 걸 추천
+  // TODO: command를 사용할 필요 없음 Mapping으로 분리
+  //  1주차에 JSP 방식을 쓰고 2주차에 Model2를 씀 그떄 모델과 뷰를 찢어내자라는 철학으로 커맨드 패턴을 사용힘
+  // 이제 스프링으로 넘어오면서 그게 다 스프링 컨트롤러에 녹아있기에 Command 패턴을 가져올 필요는 없음
+  // Spring에서 분배다 됨 Mapping으로
   public ActionCommandHelper(DependencyCommand dependencyCommand) {
     this.dependencyCommand = dependencyCommand;
     this.commands.put("write", new ArticleWriteActionCommand(this.dependencyCommand));

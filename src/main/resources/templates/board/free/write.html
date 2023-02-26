@@ -145,6 +145,8 @@
     }
     if (form.content.value == "" || !/^.{4,1999}$/g.test(form.content.value)) {
       alert("[[#{thymeleaf.write.form.content.validation}]]");
+      // TODO: 프로퍼티 네임은 전부 소문자, 카멜케이스 쓰면 안됨
+      // TODO: 또한 웹 리소스 하위에 요소에는 언더바(_)가 아닌 그냥 대시(-)를 쓸것
       form.content.focus();
       return false;
     }

@@ -61,6 +61,13 @@ public class ArticleWriteActionCommand implements ActionCommand {
   @Override
   public void execute(HttpServletRequest request, Map<String, Object> paramMap,
       Map<String, Object> model) throws Exception {
+
+    // TODO: 나중에 서비스를 만들떄, Return이 유효하지 않다면 그냥 예외를 던져버리기
+    // 예를 들어 Update경우 return에 2, 3 등의 1이 아닌 경우가 들어오는 경우가 생길 수 있음
+    // 즉 return을 true 등으로 던지면 확장성이 떨어짐.
+    // 유효하지 않은 경우는 내부적으로 예외를 던지고
+    // 패스워드 체크 등의 별도 검증은 내부적으로 하거나 아니면 컨트롤러에서 미리 잡아주기
+
     logger.debug("execute()");
     MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 

@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.board.spring.yoony.article.ArticleMapper">
-
-  <insert id="insertArticle" parameterType="com.board.spring.yoony.article.ArticleDTO" useGeneratedKeys="true"
+  <!--TODO: 쿼리도 주석 달기-->
+  <insert id="insertArticle" parameterType="com.board.spring.yoony.article.ArticleDTO"
+    useGeneratedKeys="true"
     keyProperty="articleId" keyColumn="article_id">
     INSERT INTO article
       (category_id, writer, password, title, content)
@@ -35,13 +36,13 @@
     SELECT
     article_id, category_id,
     (
-    SELECT name
-    FROM category
-    WHERE category_id = article.category_id LIMIT 1
+      SELECT name
+      FROM category
+      WHERE category_id = article.category_id LIMIT 1
     ) AS category_name,
     writer, password, title,
     content, view_count, created_date, modified_date,
-    (SELECT EXISTS(SELECT 1 FROM article_file WHERE article_id = article.article_id)) AS
+        (SELECT EXISTS(SELECT 1 FROM article_file WHERE article_id = article.article_id)) AS
     is_file_exist
     FROM article
     WHERE 1=1
@@ -65,7 +66,8 @@
     LIMIT #{pageSize} OFFSET #{rowStart}
   </select>
 
-  <select id="selectArticle" resultType="com.board.spring.yoony.article.ArticleDTO" parameterType="long">
+  <select id="selectArticle" resultType="com.board.spring.yoony.article.ArticleDTO"
+    parameterType="long">
     SELECT article_id,
            category_id,
            (SELECT name
@@ -93,7 +95,8 @@
              ) as success
 
   </select>
-  <select id="selectPasswordCheck" resultType="boolean" parameterType="com.board.spring.yoony.article.ArticleDTO">
+  <select id="selectPasswordCheck" resultType="boolean"
+    parameterType="com.board.spring.yoony.article.ArticleDTO">
     SELECT EXISTS(
              SELECT 1
              FROM article
