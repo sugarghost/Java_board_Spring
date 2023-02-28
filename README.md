@@ -1,7 +1,8 @@
-# Java_board_Spring
+# Java_board_Spring   
 간단한 게시판 프로젝트를 Spring에 방식으로 구현한 프로젝트 입니다.  
-학습을 위해서 적용할 필요가 없는 Command 패턴을 적용해 의존성 문제를 발생시켰습니다.(원래 빼고 Spring 자체 의존성 및 Mapping 시스템을 이용해야했지만 잘 몰라서 Command 썼습니다)
-기존 Java_board_Servlet에서 받은 피드백을 반영했고, 새롭게 피드백을 받아 다음 프로젝트인 Java_board_Vue에 반영 예정입니다.
+학습을 위해서 적용할 필요가 없는 Command 패턴을 적용해 의존성 문제를 발생시켰습니다.   
+(원래 빼고 Spring 자체 의존성 및 Mapping 시스템을 이용해야했지만 잘 몰라서 Command 썼습니다)   
+기존 Java_board_Servlet에서 받은 피드백을 반영했고, 새롭게 피드백을 받아 다음 프로젝트인 Java_board_Vue에 반영 예정입니다.   
 
 
 - [신규 Java_board_Servlet 피드백](#신규-java_board_servlet-피드백)
